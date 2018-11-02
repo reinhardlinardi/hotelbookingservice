@@ -9,40 +9,14 @@
 
   <xs:element name="cancelBookingResponse" type="tns:cancelBookingResponse"/>
 
-  <xs:element name="sayHelloWorldFrom" type="tns:sayHelloWorldFrom"/>
-
-  <xs:element name="sayHelloWorldFromResponse" type="tns:sayHelloWorldFromResponse"/>
-
   <xs:element name="validatePayment" type="tns:validatePayment"/>
 
   <xs:element name="validatePaymentResponse" type="tns:validatePaymentResponse"/>
 
-  <xs:complexType name="validatePayment">
-    <xs:sequence>
-      <xs:element name="arg0" type="xs:string" minOccurs="0"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="validatePaymentResponse">
-    <xs:sequence>
-      <xs:element name="return" type="xs:boolean"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="cancelBooking">
-    <xs:sequence>
-      <xs:element name="arg0" type="xs:string" minOccurs="0"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="cancelBookingResponse">
-    <xs:sequence>
-      <xs:element name="return" type="xs:string" minOccurs="0"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="bookRoom">
-    <xs:sequence/>
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="bookRoomResponse">
@@ -64,13 +38,25 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="sayHelloWorldFrom">
+  <xs:complexType name="validatePayment">
     <xs:sequence>
       <xs:element name="arg0" type="xs:string" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="sayHelloWorldFromResponse">
+  <xs:complexType name="validatePaymentResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="cancelBooking">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="cancelBookingResponse">
     <xs:sequence>
       <xs:element name="return" type="xs:string" minOccurs="0"/>
     </xs:sequence>
