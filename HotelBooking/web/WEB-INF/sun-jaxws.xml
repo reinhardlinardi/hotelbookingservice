@@ -4,6 +4,6 @@
 
     <endpoint
             name='HelloWorld'
-            implementation='example.HelloWorld'
-            url-pattern='/services/HelloWorld'/>
+            implementation='booking.Booking'
+            url-pattern='/services/Booking'/>
 </endpoints>
