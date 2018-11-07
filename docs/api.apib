@@ -1,0 +1,734 @@
+FORMAT: 1A
+HOST: http://localhost:8060
+
+# Hotel Booking Service
+
+[Hotel Booking Service](https://github.com/agathastellatasya/hotelbookingservice) REST API documentation.
+
+## Customers [/customer]
+
+### Add Profile [POST]
+
+Add new customer profile.
+
++ Request (application/json)
+    + Attributes
+        + name (string, required) - Customer name
+        + id (number, required) - Customer ID or passport
+        + email (string, required) - Customer email
+    + Body
+
+            {
+                "name" : "Cisco",
+                "id" : 123456789012345,
+                "email" : "cisco@std.stei.itb.ac.id"
+            }
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + id (number, optional) - Profile ID
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK",
+                "data" :
+                {
+                    "id" : 1
+                }
+            }
+
++ Response 400 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + id (number, optional) - Profile ID
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Missing required parameters or invalid data",
+                "data" : {}
+            }
+
+## Customer [/customer/{id}]
+
++ Parameters
+    + id (number, required) - Profile ID
+
+### Update Profile [PUT]
+
+Update customer profile.
+
++ Request (application/json)
+    + Attributes
+        + name (string, optional) - Customer name
+        + id (number, optional) - Customer ID or passport
+        + email (string, optional) - Customer email
+    + Body
+
+            {
+                "name" : "Cisco",
+                "id" : 123451234512345,
+                "email" : "cisco@std.stei.itb.ac.id"
+            }
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK"
+            }
+
++ Response 400 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : false,
+                "message" : "No parameter supplied or invalid data"
+            }
+
++ Response 404 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Invalid ID"
+            }
+
+## Invoices [/invoice]
+
+### Create Invoice [POST]
+
+Create new invoice.
+
++ Request (application/json)
+    + Attributes
+        + room_id (number, required) - Room ID
+        + customer_id (number, required) - Customer profile ID
+        + in_date (string, required) - Check in date (DD-MM-YYYY)
+        + out_date (string, required) - Check out date (DD-MM-YYYY)
+        + price (number, required) - Total price (IDR)
+    + Body
+
+            {
+                "room_id" : 1,
+                "customer_id" : 1,
+                "in_date" : "11-11-2018",
+                "out_date" : "13-11-2018",
+                "price" : 500000
+            }
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + id (number, optional) - Invoice ID
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK",
+                "data" :
+                {
+                    "id" : 1
+                }
+            }
+
++ Response 400 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + id (number, optional) - Invoice ID
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Missing required parameters or invalid data",
+                "data" : {}
+            }
+
+
+## Invoice [/invoice/{id}]
+
++ Parameters
+    + id (number, required) - Invoice ID
+
+### Get Invoice [GET]
+
+Get details of an invoice.
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + room_id (number, optional) - Room ID
+            + customer_id (number, optional) - Customer profile ID
+            + in_date (string, optional) - Check in date (DD-MM-YYYY)
+            + out_date (string, optional) - Check out date (DD-MM-YYYY)
+            + price (number, optional) - Total price (IDR)
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK",
+                "data" :
+                {
+                    "room_id": 1,
+                    "customer_id": 1,
+                    "in_date" : "11-11-2018",
+                    "out_date" : "13-11-2018",
+                    "price" : 500000
+                }
+            }
+
++ Response 404 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + room_id (number, optional) - Room ID
+            + customer_id (number, optional) - Customer profile ID
+            + type (enum[string], optional) - Invoice type
+                + Members
+                    + "Book"
+                    + "Cancel"
+            + in_date (string, optional) - Check in date (DD-MM-YYYY)
+            + out_date (string, optional) - Check out date (DD-MM-YYYY)
+            + price (number, optional) - Total price (IDR)
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Invalid ID",
+                "data" : {}
+            }
+
+### Delete Invoice [DELETE]
+
+Delete an invoice.
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK"
+            }
+
++ Response 404 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Invalid ID"
+            }
+
+## Employees [/employee]
+
+### Add Employee [POST]
+
+Add new employee profile.
+
++ Request (application/json)
+    + Attributes
+        + name (string, required) - Employee name
+        + address (string, required) - Employee address
+        + job_desc (string, required) - Employee job description
+
+    + Body
+
+            {
+                "name" : "Dono",
+                "address" : "Bandung",
+                "job_desc" : "Membersihkan semua kamar di lantai 2"
+            }
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + id (number, optional) - Employee ID
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK",
+                "data" :
+                {
+                    "id" : 1
+                }
+            }
+
++ Response 400 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + id (number, optional) - Employee ID
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Missing required parameters or invalid data",
+                "data" : {}
+            }
+
+##  Employee [/employee/{id}]
+
++ Parameters
+    + id (number, required) - Employee ID
+
+### Update Employee [PUT]
+
+Update employee profile.
+
++ Request (application/json)
+    + Attributes
+        + name (string, optional) - Employee name
+        + address (string, optional) - Employee address
+        + job_desc (string, optional) - Employee job description
+    + Body
+
+            {
+                "name" : "Dono",
+                "address" : "Bandung",
+                "job_desc" : "Membersihkan kamar di lantai 3"
+            }
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK"
+            }
+
++ Response 400 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : false,
+                "message" : "No parameter supplied or invalid data"
+            }
+
++ Response 404 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Invalid ID"
+            }
+
+### Delete Employee [DELETE]
+
+Delete employee profile.
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK"
+            }
+
++ Response 404 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Invalid ID"
+            }
+
+## Agents [/agent]
+
+### Add Agent [POST]
+
+Add new agent profile.
+
++ Request (application/json)
+    + Attributes
+        + name (string, required) - Agent name
+        + address (string, required) - Agent adress
+        + expire_date (string, required) - Agent contract expire date (DD-MM-YYYY)
+    + Body
+
+            {
+                "name" : "Traveloka",
+                "address" : "Jakarta",
+                "expire_date" : "11-11-2020"
+            }
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + id (number, optional) - Agent ID
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK",
+                "data" :
+                {
+                    "id" : 1
+                }
+            }
+
++ Response 400 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + id (number, optional) - Agent ID
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Missing required parameters or invalid data",
+                "data" : {}
+            }
+
+## Agent [/agent/{id}]
+
++ Parameters
+    + id (number, required) - Agent ID
+
+### Update Agent [PUT]
+
+Update agent profile.
+
++ Request (application/json)
+    + Attributes
+        + name (string, optional) - Agent name
+        + address (string, optional) - Agent address
+        + expire_date (string, optional) - Agent contract expire date (DD-MM-YYYY)
+    + Body
+
+            {
+                "name" : "Traveloka",
+                "address" : "Bandung",
+                "expire_date" : "11-11-2023"
+            }
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK"
+            }
+
++ Response 400 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : false,
+                "message" : "No parameter supplied or invalid data"
+            }
+
++ Response 404 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Invalid ID"
+            }
+
+### Delete Agent [DELETE]
+
+Delete agent profile.
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK"
+            }
+
++ Response 404 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Invalid ID"
+            }
+
+## Rooms [/room]
+
+### Create Room [POST]
+
+Create new room.
+
++ Request (application/json)
+    + Attributes
+        + room_type (enum[string], required) - Room type
+            + Members
+                + "Single"
+                + "Double"
+                + "Family"
+        + description (string, required) - Room description
+        + facilities (array, required) - Room facilites
+            + (enum[string])
+                + Members
+                    + "TV"
+                    + "AC"
+                    + "Internet"
+                    + "Hot/Cold Water"
+                    + "Refrigerator"
+                    + "Safe Deposit Box"
+                    + "Wardrobe"
+                    + "Window"
+                    + "Balcony"
+        + price (number, required) - Room price (IDR)
+    + Body
+
+            {
+                "room_type" : "Single",
+                "description" : "Kamar single bed yang luas dengan fasilitas yang lengkap.",
+                "facilities" : [ "TV", "AC", "Internet", "Hot/Cold Water", "Refrigerator", "Safe Deposit Box", "Wardrobe" ],
+                "price" : 400000
+            }
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + id (number, optional) - Room ID
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK",
+                "data" :
+                {
+                    "id" : 1
+                }
+            }
+
++ Response 400 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + id (number, optional) - Room ID
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Missing required parameters or invalid data",
+                "data" : {}
+            }
+
+### Get Available Room Types [GET]
+
+Get details of all available room types.
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (array, required) - Array of room data
+            + (object, optional) - Room data
+                + room_type (enum[string], required) - Room type
+                    + Members
+                        + "Single"
+                        + "Double"
+                        + "Family"
+                + description (string, required) - Room description
+                + facilities (array, required) - Room facilites
+                    + (enum[string])
+                        + Members
+                            + "TV"
+                            + "AC"
+                            + "Internet"
+                            + "Hot/Cold Water"
+                            + "Refrigerator"
+                            + "Safe Deposit Box"
+                            + "Wardrobe"
+                            + "Window"
+                            + "Balcony"
+                + price (number, required) - Room price (IDR)
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK",
+                "data" :
+                [
+                    {
+                        "room_type" : "Single",
+                        "description" : "Kamar single bed yang luas dengan fasilitas yang lengkap.",
+                        "facilities" : [ "TV", "AC", "Internet", "Hot/Cold Water", "Refrigerator", "Safe Deposit Box", "Wardrobe" ],
+                        "price" : 400000
+                    },
+                    {
+                        "room_type" : "Double",
+                        "description" : "Kamar double bed yang nyaman dengan pemandangan langsung ke kolam renang yang menakjubkan.",
+                        "facilities" : [ "TV", "AC", "Internet", "Hot/Cold Water", "Refrigerator", "Safe Deposit Box", "Wardrobe", "Window" ],
+                        "price" : 600000
+                    }
+                ]
+            }
+
+## Room [/room/{id}]
+
++ Parameters
+    + id (number, required) - Room ID
+
+### Get Room Info [GET]
+
+Get room information.
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + room_type (enum[string], optional) - Room type
+                + Members
+                    + "Single"
+                    + "Double"
+                    + "Family"
+            + description (string, required) - Room description
+            + facilities (array, required) - Room facilites
+                + (enum[string])
+                    + Members
+                        + "TV"
+                        + "AC"
+                        + "Internet"
+                        + "Hot/Cold Water"
+                        + "Refrigerator"
+                        + "Safe Deposit Box"
+                        + "Wardrobe"
+                        + "Window"
+                        + "Balcony"
+            + price (number, required) - Room price (IDR)
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK",
+                "data" :
+                {
+                    "room_type" : "Single",
+                    "description" : "Kamar single bed yang luas dengan fasilitas yang lengkap.",
+                    "facilities" : [ "TV", "AC", "Internet", "Hot/Cold Water", "Refrigerator", "Safe Deposit Box", "Wardrobe" ],
+                    "price" : 400000
+                }
+            }
+
++ Response 404 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + room_type (enum[string], optional) - Room type
+                + Members
+                    + "Single"
+                    + "Double"
+                    + "Family"
+            + description (string, required) - Room description
+            + facilities (array, required) - Room facilites
+                + (enum[string])
+                    + Members
+                        + "TV"
+                        + "AC"
+                        + "Internet"
+                        + "Hot/Cold Water"
+                        + "Refrigerator"
+                        + "Safe Deposit Box"
+                        + "Wardrobe"
+                        + "Window"
+                        + "Balcony"
+            + price (number, required) - Room price (IDR)
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Invalid ID",
+                "data" : {}
+            }
+
+### Delete Room [DELETE]
+
+Delete room.
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK"
+            }
+
++ Response 404 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Invalid ID"
+            }
