@@ -55,7 +55,7 @@ Register new customer profile.
             {
                 "success" : false,
                 "message" : "Missing required parameters or invalid data",
-                "data" : {}
+                "data" : null
             }
 
 ## Customer - Private [/customer{?auth,email}]
@@ -106,7 +106,7 @@ Get all customer profiles with optional filters.
             {
                 "success" : false,
                 "message" : "Invalid authentication",
-                "data" : []
+                "data" : null
             }
 
 ## Customer by ID [/customer/{id}{?auth}]
@@ -230,7 +230,7 @@ Create new invoice.
             {
                 "success" : false,
                 "message" : "Missing required parameters or invalid data",
-                "data" : {}
+                "data" : null
             }
 
 + Response 401 (application/json)
@@ -244,7 +244,7 @@ Create new invoice.
             {
                 "success" : false,
                 "message" : "Invalid authentication",
-                "data" : {}
+                "data" : null
             }
 
 ## Invoice by ID [/invoice/{id}{?auth}]
@@ -297,7 +297,7 @@ Get details of an invoice.
             {
                 "success" : false,
                 "message" : "Invalid authentication",
-                "data" : {}
+                "data" : null
             }
 
 + Response 404 (application/json)
@@ -315,7 +315,7 @@ Get details of an invoice.
             {
                 "success" : false,
                 "message" : "Invalid ID",
-                "data" : {}
+                "data" : null
             }
 
 ### Cancel Invoice [DELETE]
@@ -406,7 +406,7 @@ Add new employee profile.
             {
                 "success" : false,
                 "message" : "Missing required parameters or invalid data",
-                "data" : {}
+                "data" : null
             }
 
 + Response 401 (application/json)
@@ -420,7 +420,7 @@ Add new employee profile.
             {
                 "success" : false,
                 "message" : "Invalid authentication",
-                "data" : {}
+                "data" : null
             }
 
 ##  Employee by ID [/employee/{id}{?auth}]
@@ -577,7 +577,7 @@ Register new agent profile.
             {
                 "success" : false,
                 "message" : "Missing required parameters or invalid data",
-                "data" : {}
+                "data" : null
             }
 
 ## Agent by ID [/agent/{id}{?auth}]
@@ -803,7 +803,7 @@ Create new room.
             {
                 "success" : false,
                 "message" : "Missing required parameters or invalid data",
-                "data" : {}
+                "data" : null
             }
 
 + Response 401 (application/json)
@@ -817,7 +817,7 @@ Create new room.
             {
                 "success" : false,
                 "message" : "Invalid authentication",
-                "data" : {}
+                "data" : null
             }
 
 
@@ -899,7 +899,7 @@ Get room information.
             {
                 "success" : false,
                 "message" : "Invalid authentication",
-                "data" : {}
+                "data" : null
             }
 
 + Response 404 (application/json)
@@ -931,7 +931,7 @@ Get room information.
             {
                 "success" : false,
                 "message" : "Invalid ID",
-                "data" : {}
+                "data" : null
             }
 
 ### Delete Room [DELETE]

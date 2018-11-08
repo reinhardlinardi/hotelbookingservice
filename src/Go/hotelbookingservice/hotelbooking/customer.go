@@ -82,12 +82,19 @@ func RegisterProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 
 	defer customerStatement.Close()
 
-	_, err = customerStatement.Exec(profile.Name, profile.ID, profile.Email, token)
+	res, err := customerStatement.Exec(profile.Name, profile.ID, profile.Email, token)
 
 	if err != nil {
 		log.Println("RegisterProfile :", err)
 		return
 	}
 
-	SendOK(w, nil)
+	id, _ := res.LastInsertId()
+
+	data := RegisterProfileResponseData{
+		ID:    int(id),
+		Token: token,
+	}
+
+	SendOK(w, data)
 }
