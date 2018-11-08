@@ -14,13 +14,13 @@ Add new customer profile.
 + Request (application/json)
     + Attributes
         + name (string, required) - Customer name
-        + id (number, required) - Customer ID or passport
+        + identity (string, required) - Customer ID or passport
         + email (string, required) - Customer email
     + Body
 
             {
                 "name" : "Cisco",
-                "id" : 123456789012345,
+                "identity" : "123456789012345",
                 "email" : "cisco@std.stei.itb.ac.id"
             }
 
@@ -67,13 +67,13 @@ Update customer profile.
 + Request (application/json)
     + Attributes
         + name (string, optional) - Customer name
-        + id (number, optional) - Customer ID or passport
+        + identity (string, optional) - Customer ID or passport
         + email (string, optional) - Customer email
     + Body
 
             {
                 "name" : "Cisco",
-                "id" : 123451234512345,
+                "identity" : "123451234512345",
                 "email" : "cisco@std.stei.itb.ac.id"
             }
 
@@ -120,6 +120,10 @@ Create new invoice.
     + Attributes
         + room_id (number, required) - Room ID
         + customer_id (number, required) - Customer profile ID
+        + type (enum[string], required) - Invoice type (book or cancel)
+            + Members
+                + "book"
+                + "cancel"
         + in_date (string, required) - Check in date (DD-MM-YYYY)
         + out_date (string, required) - Check out date (DD-MM-YYYY)
         + price (number, required) - Total price (IDR)
@@ -128,6 +132,7 @@ Create new invoice.
             {
                 "room_id" : 1,
                 "customer_id" : 1,
+                "type" : "book",
                 "in_date" : "11-11-2018",
                 "out_date" : "13-11-2018",
                 "price" : 500000
@@ -181,6 +186,10 @@ Get details of an invoice.
         + data (object, required) - Response data
             + room_id (number, optional) - Room ID
             + customer_id (number, optional) - Customer profile ID
+            + type (enum[string], optional) - Invoice type (book or cancel)
+                + Members
+                    + "book"
+                    + "cancel"
             + in_date (string, optional) - Check in date (DD-MM-YYYY)
             + out_date (string, optional) - Check out date (DD-MM-YYYY)
             + price (number, optional) - Total price (IDR)
@@ -193,6 +202,7 @@ Get details of an invoice.
                 {
                     "room_id": 1,
                     "customer_id": 1,
+                    "type": "book",
                     "in_date" : "11-11-2018",
                     "out_date" : "13-11-2018",
                     "price" : 500000
@@ -206,10 +216,10 @@ Get details of an invoice.
         + data (object, required) - Response data
             + room_id (number, optional) - Room ID
             + customer_id (number, optional) - Customer profile ID
-            + type (enum[string], optional) - Invoice type
+            + type (enum[string], optional) - Invoice type (book or cancel)
                 + Members
-                    + "Book"
-                    + "Cancel"
+                    + "book"
+                    + "cancel"
             + in_date (string, optional) - Check in date (DD-MM-YYYY)
             + out_date (string, optional) - Check out date (DD-MM-YYYY)
             + price (number, optional) - Total price (IDR)
