@@ -1,3 +1,4 @@
 src/Java/HotelBooking/.idea/
 src/Java/HotelBooking/out/
 src/Go/hotelbookingservice/hotelbookingservice
+src/Go/hotelbookingservice/config/dbconfig.json

@@ -9,9 +9,12 @@ import (
 )
 
 func main() {
+	hotelbooking.ConnectDB()
+	defer hotelbooking.DisconnectDB()
+
+	hotelbooking.GetHotelAuthToken()
 	router := httprouter.New()
 
-	// Customer - Public
 	router.POST("/customer", hotelbooking.RegisterProfile)
 
 	log.Fatal(http.ListenAndServe(":8060", router))
