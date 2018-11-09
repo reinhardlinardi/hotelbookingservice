@@ -105,43 +105,6 @@ func SendBadRequestWithData(w http.ResponseWriter) {
 	w.Write(json)
 }
 
-func SendUnauthorized(w http.ResponseWriter) {
-	response := Response{
-		Success: false,
-		Message: ERR_AUTHENTICATION,
-	}
-
-	json, err := json.Marshal(response)
-
-	if err != nil {
-		log.Println("SendUnauthorized :", err)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusUnauthorized)
-	w.Write(json)
-}
-
-func SendUnauthorizedWithData(w http.ResponseWriter) {
-	response := DataResponse{
-		Success: false,
-		Message: ERR_AUTHENTICATION,
-		Data:    nil,
-	}
-
-	json, err := json.Marshal(response)
-
-	if err != nil {
-		log.Println("SendUnauthorizedWithData :", err)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusUnauthorized)
-	w.Write(json)
-}
-
 func SendNotFound(w http.ResponseWriter) {
 	response := Response{
 		Success: false,

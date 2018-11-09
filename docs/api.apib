@@ -120,16 +120,16 @@ Create new invoice.
     + Attributes
         + room_id (number, required) - Room ID
         + customer_id (number, required) - Customer profile ID
-        + in_date (string, required) - Check in date (DD-MM-YYYY)
-        + out_date (string, required) - Check out date (DD-MM-YYYY)
+        + in (string, required) - Check in date (DD-MM-YYYY)
+        + out (string, required) - Check out date (DD-MM-YYYY)
         + price (number, required) - Total price (IDR)
     + Body
 
             {
                 "room_id" : 1,
                 "customer_id" : 1,
-                "in_date" : "11-11-2018",
-                "out_date" : "13-11-2018",
+                "in" : "11-11-2018",
+                "out" : "13-11-2018",
                 "price" : 500000
             }
 
@@ -180,8 +180,8 @@ Get details of an invoice.
         + data (object, required) - Response data
             + room_id (number, optional) - Room ID
             + customer_id (number, optional) - Customer profile ID
-            + in_date (string, optional) - Check in date (DD-MM-YYYY)
-            + out_date (string, optional) - Check out date (DD-MM-YYYY)
+            + in (string, optional) - Check in date (DD-MM-YYYY)
+            + out (string, optional) - Check out date (DD-MM-YYYY)
             + price (number, optional) - Total price (IDR)
     + Body
 
@@ -192,8 +192,8 @@ Get details of an invoice.
                 {
                     "room_id": 1,
                     "customer_id": 1,
-                    "in_date" : "11-11-2018",
-                    "out_date" : "13-11-2018",
+                    "in" : "11-11-2018",
+                    "out" : "13-11-2018",
                     "price" : 500000
                 }
             }
@@ -205,8 +205,8 @@ Get details of an invoice.
         + data (object, required) - Response data
             + room_id (number, optional) - Room ID
             + customer_id (number, optional) - Customer profile ID
-            + in_date (string, optional) - Check in date (DD-MM-YYYY)
-            + out_date (string, optional) - Check out date (DD-MM-YYYY)
+            + in (string, optional) - Check in date (DD-MM-YYYY)
+            + out (string, optional) - Check out date (DD-MM-YYYY)
             + price (number, optional) - Total price (IDR)
     + Body
 
@@ -507,57 +507,6 @@ Delete agent profile.
 
 ## Room [/room]
 
-### Get Available Room Types [GET]
-
-Get details of all available room types.
-
-+ Response 200 (application/json)
-    + Attributes
-        + success (boolean, required) - Request status
-        + message (string, required) - Response message
-        + data (array, required) - Array of room data
-            + (object, optional) - Room data
-                + room_type (enum[string], required) - Room type
-                    + Members
-                        + "Single"
-                        + "Double"
-                        + "Family"
-                + description (string, required) - Room description
-                + facilities (array, required) - Room facilites
-                    + (enum[string])
-                        + Members
-                            + "TV"
-                            + "AC"
-                            + "Internet"
-                            + "Hot/Cold Water"
-                            + "Refrigerator"
-                            + "Safe Deposit Box"
-                            + "Wardrobe"
-                            + "Window"
-                            + "Balcony"
-                + price (number, required) - Room price (IDR)
-    + Body
-
-            {
-                "success" : true,
-                "message" : "OK",
-                "data" :
-                [
-                    {
-                        "room_type" : "Single",
-                        "description" : "Kamar single bed yang luas dengan fasilitas yang lengkap.",
-                        "facilities" : [ "TV", "AC", "Internet", "Hot/Cold Water", "Refrigerator", "Safe Deposit Box", "Wardrobe" ],
-                        "price" : 400000
-                    },
-                    {
-                        "room_type" : "Double",
-                        "description" : "Kamar double bed yang nyaman dengan pemandangan langsung ke kolam renang yang menakjubkan.",
-                        "facilities" : [ "TV", "AC", "Internet", "Hot/Cold Water", "Refrigerator", "Safe Deposit Box", "Wardrobe", "Window" ],
-                        "price" : 600000
-                    }
-                ]
-            }
-
 ### Create Room [POST]
 
 Create new room.
@@ -570,25 +519,30 @@ Create new room.
                 + "Double"
                 + "Family"
         + description (string, required) - Room description
-        + facilities (array, required) - Room facilites
-            + (enum[string])
-                + Members
-                    + "TV"
-                    + "AC"
-                    + "Internet"
-                    + "Hot/Cold Water"
-                    + "Refrigerator"
-                    + "Safe Deposit Box"
-                    + "Wardrobe"
-                    + "Window"
-                    + "Balcony"
+        + tv (boolean, required) - Room facility
+        + ac (boolean, required) - Room facility
+        + internet (boolean, required) - Room facility
+        + hot_water (boolean, required) - Room facility
+        + refrigerator (boolean, required) - Room facility
+        + safe_deposit_box (boolean, required) - Room facility
+        + wardrobe (boolean, required) - Room facility
+        + window (boolean, required) - Room facility
+        + balcony (boolean, required) - Room facility
         + price (number, required) - Room price (IDR)
     + Body
 
             {
                 "room_type" : "Single",
                 "description" : "Kamar single bed yang luas dengan fasilitas yang lengkap.",
-                "facilities" : [ "TV", "AC", "Internet", "Hot/Cold Water", "Refrigerator", "Safe Deposit Box", "Wardrobe" ],
+                "tv" : true,
+                "ac" : true,
+                "internet"  : true,
+                "hot_water"  : true,
+                "refrigerator"  : true,
+                "safe_deposit_box"  : true,
+                "wardrobe"  : true,
+                "window"  : false,
+                "balcony"  : false,
                 "price" : 400000
             }
 
@@ -623,6 +577,79 @@ Create new room.
                 "data" : null
             }
 
+## Room by Date [/room{?in,out}]
+
++ Parameters
+    + in (string, required) - Check in date (DD-MM-YYYY)
+    + out (string, required) - Check out date (DD-MM-YYYY)
+
+### Get Available Rooms [GET]
+
+Get details of all available room between check in date and check out date.
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (array, required) - Array of room data
+            + (object, optional) - Room data
+                + id (number, required) - Room ID
+                + room_type (enum[string], required) - Room type
+                    + Members
+                        + "Single"
+                        + "Double"
+                        + "Family"
+                + description (string, required) - Room description
+                + tv (boolean, required) - Room facility
+                + ac (boolean, required) - Room facility
+                + internet (boolean, required) - Room facility
+                + hot_water (boolean, required) - Room facility
+                + refrigerator (boolean, required) - Room facility
+                + safe_deposit_box (boolean, required) - Room facility
+                + wardrobe (boolean, required) - Room facility
+                + window (boolean, required) - Room facility
+                + balcony (boolean, required) - Room facility
+                + price (number, required) - Room price (IDR)
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK",
+                "data" :
+                [
+                    {
+                        "id" : 1,
+                        "room_type" : "Single",
+                        "description" : "Kamar single bed yang luas dengan fasilitas yang lengkap.",
+                        "tv" : true,
+                        "ac" : true,
+                        "internet"  : true,
+                        "hot_water"  : true,
+                        "refrigerator"  : true,
+                        "safe_deposit_box"  : true,
+                        "wardrobe"  : true,
+                        "window"  : false,
+                        "balcony"  : false,
+                        "price" : 400000
+                    },
+                    {
+                        "id" : 2,                        
+                        "room_type" : "Double",
+                        "description" : "Kamar double bed yang nyaman dengan pemandangan langsung ke kolam renang yang menakjubkan.",
+                        "tv" : true,
+                        "ac" : true,
+                        "internet"  : true,
+                        "hot_water"  : true,
+                        "refrigerator"  : true,
+                        "safe_deposit_box"  : true,
+                        "wardrobe"  : true,
+                        "window"  : true,
+                        "balcony"  : false,
+                        "price" : 600000
+                    }
+                ]
+            }
+
 ## Room by ID [/room/{id}]
 
 + Parameters
@@ -637,24 +664,22 @@ Get room information.
         + success (boolean, required) - Request status
         + message (string, required) - Response message
         + data (object, required) - Response data
+            + id (number, required) - Room ID
             + room_type (enum[string], optional) - Room type
                 + Members
                     + "Single"
                     + "Double"
                     + "Family"
             + description (string, required) - Room description
-            + facilities (array, required) - Room facilites
-                + (enum[string])
-                    + Members
-                        + "TV"
-                        + "AC"
-                        + "Internet"
-                        + "Hot/Cold Water"
-                        + "Refrigerator"
-                        + "Safe Deposit Box"
-                        + "Wardrobe"
-                        + "Window"
-                        + "Balcony"
+            + tv (boolean, required) - Room facility
+            + ac (boolean, required) - Room facility
+            + internet (boolean, required) - Room facility
+            + hot_water (boolean, required) - Room facility
+            + refrigerator (boolean, required) - Room facility
+            + safe_deposit_box (boolean, required) - Room facility
+            + wardrobe (boolean, required) - Room facility
+            + window (boolean, required) - Room facility
+            + balcony (boolean, required) - Room facility
             + price (number, required) - Room price (IDR)
     + Body
 
@@ -665,7 +690,15 @@ Get room information.
                 {
                     "room_type" : "Single",
                     "description" : "Kamar single bed yang luas dengan fasilitas yang lengkap.",
-                    "facilities" : [ "TV", "AC", "Internet", "Hot/Cold Water", "Refrigerator", "Safe Deposit Box", "Wardrobe" ],
+                    "tv" : true,
+                    "ac" : true,
+                    "internet"  : true,
+                    "hot_water"  : true,
+                    "refrigerator"  : true,
+                    "safe_deposit_box"  : true,
+                    "wardrobe"  : true,
+                    "window"  : false,
+                    "balcony"  : false,
                     "price" : 400000
                 }
             }
@@ -681,18 +714,15 @@ Get room information.
                     + "Double"
                     + "Family"
             + description (string, required) - Room description
-            + facilities (array, required) - Room facilites
-                + (enum[string])
-                    + Members
-                        + "TV"
-                        + "AC"
-                        + "Internet"
-                        + "Hot/Cold Water"
-                        + "Refrigerator"
-                        + "Safe Deposit Box"
-                        + "Wardrobe"
-                        + "Window"
-                        + "Balcony"
+            + tv (boolean, required) - Room facility
+            + ac (boolean, required) - Room facility
+            + internet (boolean, required) - Room facility
+            + hot_water (boolean, required) - Room facility
+            + refrigerator (boolean, required) - Room facility
+            + safe_deposit_box (boolean, required) - Room facility
+            + wardrobe (boolean, required) - Room facility
+            + window (boolean, required) - Room facility
+            + balcony (boolean, required) - Room facility
             + price (number, required) - Room price (IDR)
     + Body
 
