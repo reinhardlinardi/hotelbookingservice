@@ -134,3 +134,51 @@ func GetRoomInfo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	SendOKWithData(w, room)
 }
+
+func DeleteRoom(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id, err := strconv.Atoi(ps.ByName("id"))
+
+	if err != nil {
+		log.Println("DeleteRoom :", err)
+
+		SendNotFound(w)
+		return
+	}
+
+	statement, err := db.Prepare("SELECT id FROM room WHERE id = ?")
+
+	if err != nil {
+		log.Println("DeleteRoom :", err)
+
+		SendNotFound(w)
+		return
+	}
+
+	defer statement.Close()
+
+	var dummy int
+	err = statement.QueryRow(id).Scan(&dummy)
+
+	if err != nil {
+		log.Println("DeleteRoom :", err)
+
+		SendNotFound(w)
+		return
+	}
+
+	statement, err = db.Prepare("DELETE FROM room WHERE id = ?")
+
+	if err != nil {
+		log.Println("DeleteRoom :", err)
+		return
+	}
+
+	_, err = statement.Exec(id)
+
+	if err != nil {
+		log.Println("DeleteRoom :", err)
+		return
+	}
+
+	SendOK(w)
+}

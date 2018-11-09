@@ -27,6 +27,7 @@ func main() {
 
 	router.POST("/room", hotelbooking.CreateRoom)
 	router.GET("/room/:id", hotelbooking.GetRoomInfo)
+	router.DELETE("/room/:id", hotelbooking.DeleteRoom)
 
 	log.Fatal(http.ListenAndServe(":8060", router))
 }
