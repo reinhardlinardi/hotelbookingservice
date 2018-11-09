@@ -30,6 +30,7 @@ func main() {
 	router.DELETE("/room/:id", hotelbooking.DeleteRoom)
 
 	router.POST("/invoice", hotelbooking.CreateInvoice)
+	router.PUT("/invoice/:id", hotelbooking.UpdateInvoicePaymentStatus)
 
 	log.Fatal(http.ListenAndServe(":8060", router))
 }

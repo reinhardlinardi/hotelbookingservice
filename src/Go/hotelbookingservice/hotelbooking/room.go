@@ -39,9 +39,9 @@ func isRoomTypeValid(roomType string) bool {
 
 	if roomType == "single" || roomType == "double" || roomType == "family" {
 		return true
-	} else {
-		return false
 	}
+
+	return false
 }
 
 /* API */

@@ -122,15 +122,13 @@ Create new invoice.
         + customer_id (number, required) - Customer profile ID
         + in (string, required) - Check in date (DD-MM-YYYY)
         + out (string, required) - Check out date (DD-MM-YYYY)
-        + price (number, required) - Total price (IDR)
     + Body
 
             {
                 "room_id" : 1,
                 "customer_id" : 1,
                 "in" : "11-11-2018",
-                "out" : "13-11-2018",
-                "price" : 500000
+                "out" : "13-11-2018"
             }
 
 + Response 200 (application/json)
@@ -214,6 +212,32 @@ Get details of an invoice.
                 "success" : false,
                 "message" : "Invalid ID",
                 "data" : null
+            }
+
+### Update Invoice Payment Status [PUT]
+
+Update invoice payment status.
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK"
+            }
+
++ Response 404 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Invalid ID"
             }
 
 ### Cancel Invoice [DELETE]

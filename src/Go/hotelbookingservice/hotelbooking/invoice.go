@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/julienschmidt/httprouter"
@@ -126,4 +127,52 @@ func CreateInvoice(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	}
 
 	SendOKWithData(w, data)
+}
+
+func UpdateInvoicePaymentStatus(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id, err := strconv.Atoi(ps.ByName("id"))
+
+	if err != nil {
+		log.Println("UpdateInvoicePaymentStatus :", err)
+
+		SendNotFound(w)
+		return
+	}
+
+	statement, err := db.Prepare("SELECT id FROM invoice WHERE id = ?")
+
+	if err != nil {
+		log.Println("UpdateInvoicePaymentStatus :", err)
+
+		SendNotFound(w)
+		return
+	}
+
+	defer statement.Close()
+
+	var dummy int
+	err = statement.QueryRow(id).Scan(&dummy)
+
+	if err != nil {
+		log.Println("UpdateInvoicePaymentStatus :", err)
+
+		SendNotFound(w)
+		return
+	}
+
+	statement, err = db.Prepare("UPDATE invoice SET paid = 1 WHERE id = ?")
+
+	if err != nil {
+		log.Println("UpdateInvoicePaymentStatus :", err)
+		return
+	}
+
+	_, err = statement.Exec(id)
+
+	if err != nil {
+		log.Println("UpdateInvoicePaymentStatus :", err)
+		return
+	}
+
+	SendOK(w)
 }
