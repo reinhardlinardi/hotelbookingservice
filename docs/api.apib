@@ -181,6 +181,8 @@ Get details of an invoice.
             + in (string, optional) - Check in date (DD-MM-YYYY)
             + out (string, optional) - Check out date (DD-MM-YYYY)
             + price (number, optional) - Total price (IDR)
+            + paid (boolean, optional) - Payment status
+            + cancelled (boolean, optional) - Cancellation status
     + Body
 
             {
@@ -192,7 +194,9 @@ Get details of an invoice.
                     "customer_id": 1,
                     "in" : "11-11-2018",
                     "out" : "13-11-2018",
-                    "price" : 500000
+                    "price" : 500000,
+                    "paid" : true,
+                    "cancelled" : false
                 }
             }
 

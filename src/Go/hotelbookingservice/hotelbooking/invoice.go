@@ -20,6 +20,16 @@ type Invoice struct {
 	CheckOut   *string `json:"out"`
 }
 
+type CompleteInvoice struct {
+	RoomID     int    `json:"room_id"`
+	CustomerID int    `json:"customer_id"`
+	CheckIn    string `json:"in"`
+	CheckOut   string `json:"out"`
+	Price      int    `json:"price"`
+	Paid       bool   `json:"paid"`
+	Cancelled  bool   `json:"cancelled"`
+}
+
 type CreateInvoiceResponseData struct {
 	ID int `json:"id"`
 }
@@ -127,6 +137,55 @@ func CreateInvoice(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	}
 
 	SendOKWithData(w, data)
+}
+
+func GetInvoice(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id, err := strconv.Atoi(ps.ByName("id"))
+
+	if err != nil {
+		log.Println("GetInvoice :", err)
+
+		SendNotFoundWithData(w)
+		return
+	}
+
+	statement, err := db.Prepare("SELECT room_id, customer_id, in_date, out_date, price, paid, cancelled FROM invoice WHERE id = ?")
+
+	if err != nil {
+		log.Println("GetInvoice :", err)
+		return
+	}
+
+	defer statement.Close()
+
+	var invoice CompleteInvoice
+	err = statement.QueryRow(id).Scan(&invoice.RoomID, &invoice.CustomerID, &invoice.CheckIn, &invoice.CheckOut, &invoice.Price, &invoice.Paid, &invoice.Cancelled)
+
+	checkIn, err := time.Parse("2006-01-02", invoice.CheckIn)
+
+	if err != nil {
+		log.Println("GetInvoice :", err)
+		return
+	}
+
+	checkOut, err := time.Parse("2006-01-02", invoice.CheckOut)
+
+	if err != nil {
+		log.Println("GetInvoice :", err)
+		return
+	}
+
+	invoice.CheckIn = checkIn.Format("02-01-2006")
+	invoice.CheckOut = checkOut.Format("02-01-2006")
+
+	if err != nil {
+		log.Println("GetInvoice :", err)
+
+		SendNotFoundWithData(w)
+		return
+	}
+
+	SendOKWithData(w, invoice)
 }
 
 func UpdateInvoicePaymentStatus(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {

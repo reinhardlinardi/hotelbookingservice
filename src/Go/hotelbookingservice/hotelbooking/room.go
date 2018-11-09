@@ -101,6 +101,10 @@ func CreateRoom(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	SendOKWithData(w, data)
 }
 
+func GetAvailableRooms(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+}
+
 func GetRoomInfo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id, err := strconv.Atoi(ps.ByName("id"))
 
