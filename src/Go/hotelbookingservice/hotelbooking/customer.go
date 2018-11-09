@@ -22,16 +22,9 @@ type RegisterProfileResponseData struct {
 	ID int `json:"id"`
 }
 
-type RegisterProfileResponse struct {
-	Success bool                        `json:"success"`
-	Message string                      `json:"message"`
-	Data    RegisterProfileResponseData `json:"data"`
-}
-
 /* API */
 
 func RegisterProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
 	var profile Profile
 	body, err := ioutil.ReadAll(r.Body)
 
