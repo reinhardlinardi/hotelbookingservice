@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -12,9 +13,9 @@ import (
 /* Types */
 
 type Profile struct {
-	Name  string `json:"name"`
-	ID    string `json:"id"`
-	Email string `json:"email"`
+	Name  *string `json:"name"`
+	ID    *string `json:"id"`
+	Email *string `json:"email"`
 }
 
 type RegisterProfileResponseData struct {
@@ -50,7 +51,7 @@ func RegisterProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 		return
 	}
 
-	if profile.Name == "" || profile.ID == "" || profile.Email == "" {
+	if profile.Name == nil || profile.ID == nil || profile.Email == nil {
 		SendBadRequestWithData(w)
 		return
 	}
@@ -64,7 +65,7 @@ func RegisterProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 
 	defer statement.Close()
 
-	res, err := statement.Exec(profile.Name, profile.ID, profile.Email)
+	res, err := statement.Exec(*profile.Name, *profile.ID, *profile.Email)
 
 	if err != nil {
 		log.Println("RegisterProfile :", err)
@@ -99,18 +100,62 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 		SendBadRequest(w)
 		return
 	}
-	/*
-		id, err := strconv.Atoi(ps.ByName("id"))
 
-		if err != nil {
-			log.Println("UpdateProfile :", err)
+	id, err := strconv.Atoi(ps.ByName("id"))
 
-			SendNotFound(w)
-			return
-		}
-	*/
-	if profile.Name == "" && profile.ID == "" && profile.Email == "" {
-		SendOK(w)
+	if err != nil {
+		log.Println("UpdateProfile :", err)
+
+		SendNotFound(w)
 		return
 	}
+
+	statement, err := db.Prepare("SELECT name, identity, email FROM customer WHERE id = ?")
+
+	if err != nil {
+		log.Println("UpdateProfile :", err)
+
+		SendNotFound(w)
+		return
+	}
+
+	defer statement.Close()
+
+	var profileData Profile
+	err = statement.QueryRow(id).Scan(&profileData.Name, &profileData.ID, &profileData.Email)
+
+	if err != nil {
+		log.Println("UpdateProfile :", err)
+
+		SendNotFound(w)
+		return
+	}
+
+	if profile.Name == nil {
+		profile.Name = profileData.Name
+	}
+
+	if profile.ID == nil {
+		profile.ID = profileData.ID
+	}
+
+	if profile.Email == nil {
+		profile.Email = profileData.Email
+	}
+
+	statement, err = db.Prepare("UPDATE customer SET name = ?, identity = ?, email = ? WHERE id = ?")
+
+	if err != nil {
+		log.Println("UpdateProfile :", err)
+		return
+	}
+
+	_, err = statement.Exec(*profile.Name, *profile.ID, *profile.Email, id)
+
+	if err != nil {
+		log.Println("UpdateProfile :", err)
+		return
+	}
+
+	SendOK(w)
 }
