@@ -5,7 +5,7 @@ HOST: http://localhost:8060
 
 [Hotel Booking Service](https://github.com/agathastellatasya/hotelbookingservice) REST API documentation.
 
-## Customer - Public [/customer]
+## Customer [/customer]
 
 ### Register Profile [POST]
 
@@ -30,7 +30,6 @@ Register new customer profile.
         + message (string, required) - Response message
         + data (object, required) - Response data
             + id (number, optional) - Profile ID
-            + token (string, optional) - Authentication token
     + Body
 
             {
@@ -38,8 +37,7 @@ Register new customer profile.
                 "message" : "OK",
                 "data" :
                 {
-                    "id" : 1,
-                    "token" : "12345678"
+                    "id" : 1
                 }
             }
 
@@ -49,7 +47,6 @@ Register new customer profile.
         + message (string, required) - Response message
         + data (object, required) - Response data
             + id (number, optional) - Profile ID
-            + token (string, optional) - Authentication token
     + Body
 
             {
@@ -58,10 +55,9 @@ Register new customer profile.
                 "data" : null
             }
 
-## Customer by ID [/customer/{id}{?auth}]
+## Customer by ID [/customer/{id}]
 
 + Parameters
-    + auth (string, required) - Authentication token
     + id (number, required) - Profile ID
 
 ### Update Profile [PUT]
@@ -103,17 +99,6 @@ Update customer profile.
                 "message" : "Invalid data"
             }
 
-+ Response 401 (application/json)
-    + Attributes
-        + success (boolean, required) - Request status
-        + message (string, required) - Response message
-    + Body
-
-            {
-                "success" : false,
-                "message" : "Invalid authentication"
-            }
-
 + Response 404 (application/json)
     + Attributes
         + success (boolean, required) - Request status
@@ -125,10 +110,7 @@ Update customer profile.
                 "message" : "Invalid ID"
             }
 
-## Invoice [/invoice{?auth}]
-
-+ Parameters
-    + auth (string, required) - Authentication token
+## Invoice [/invoice]
 
 ### Create Invoice [POST]
 
@@ -182,24 +164,9 @@ Create new invoice.
                 "data" : null
             }
 
-+ Response 401 (application/json)
-    + Attributes
-        + success (boolean, required) - Request status
-        + message (string, required) - Response message
-        + data (object, required) - Response data
-            + id (number, optional) - Invoice ID
-    + Body
-
-            {
-                "success" : false,
-                "message" : "Invalid authentication",
-                "data" : null
-            }
-
-## Invoice by ID [/invoice/{id}{?auth}]
+## Invoice by ID [/invoice/{id}]
 
 + Parameters
-    + auth (string, required) - Authentication token
     + id (number, required) - Invoice ID
 
 ### Get Invoice [GET]
@@ -229,24 +196,6 @@ Get details of an invoice.
                     "out_date" : "13-11-2018",
                     "price" : 500000
                 }
-            }
-
-+ Response 401 (application/json)
-    + Attributes
-        + success (boolean, required) - Request status
-        + message (string, required) - Response message
-        + data (object, required) - Response data
-            + room_id (number, optional) - Room ID
-            + customer_id (number, optional) - Customer profile ID
-            + in_date (string, optional) - Check in date (DD-MM-YYYY)
-            + out_date (string, optional) - Check out date (DD-MM-YYYY)
-            + price (number, optional) - Total price (IDR)
-    + Body
-
-            {
-                "success" : false,
-                "message" : "Invalid authentication",
-                "data" : null
             }
 
 + Response 404 (application/json)
@@ -282,17 +231,6 @@ Cancel an invoice.
                 "message" : "OK"
             }
 
-+ Response 401 (application/json)
-    + Attributes
-        + success (boolean, required) - Request status
-        + message (string, required) - Response message
-    + Body
-
-            {
-                "success" : false,
-                "message" : "Invalid authentication"
-            }
-
 + Response 404 (application/json)
     + Attributes
         + success (boolean, required) - Request status
@@ -304,10 +242,7 @@ Cancel an invoice.
                 "message" : "Invalid ID"
             }
 
-## Employee [/employee{?auth}]
-
-+ Parameters
-    + auth (string, required) - Authentication token
+## Employee [/employee]
 
 ### Add Employee [POST]
 
@@ -358,24 +293,9 @@ Add new employee profile.
                 "data" : null
             }
 
-+ Response 401 (application/json)
-    + Attributes
-        + success (boolean, required) - Request status
-        + message (string, required) - Response message
-        + data (object, required) - Response data
-            + id (number, optional) - Employee ID
-    + Body
-
-            {
-                "success" : false,
-                "message" : "Invalid authentication",
-                "data" : null
-            }
-
-##  Employee by ID [/employee/{id}{?auth}]
+##  Employee by ID [/employee/{id}]
 
 + Parameters
-    + auth (string, required) - Authentication token
     + id (number, required) - Employee ID
 
 ### Update Employee [PUT]
@@ -417,17 +337,6 @@ Update employee profile.
                 "message" : "Invalid data"
             }
 
-+ Response 401 (application/json)
-    + Attributes
-        + success (boolean, required) - Request status
-        + message (string, required) - Response message
-    + Body
-
-            {
-                "success" : false,
-                "message" : "Invalid authentication"
-            }
-
 + Response 404 (application/json)
     + Attributes
         + success (boolean, required) - Request status
@@ -454,17 +363,6 @@ Delete employee profile.
                 "message" : "OK"
             }
 
-+ Response 401 (application/json)
-    + Attributes
-        + success (boolean, required) - Request status
-        + message (string, required) - Response message
-    + Body
-
-            {
-                "success" : false,
-                "message" : "Invalid authentication"
-            }
-
 + Response 404 (application/json)
     + Attributes
         + success (boolean, required) - Request status
@@ -476,7 +374,7 @@ Delete employee profile.
                 "message" : "Invalid ID"
             }
 
-## Agent - Public [/agent]
+## Agent [/agent]
 
 ### Register Agent [POST]
 
@@ -501,7 +399,6 @@ Register new agent profile.
         + message (string, required) - Response message
         + data (object, required) - Response data
             + id (number, optional) - Agent ID
-            + token (string, optional) - Authentication token
     + Body
 
             {
@@ -509,8 +406,7 @@ Register new agent profile.
                 "message" : "OK",
                 "data" :
                 {
-                    "id" : 1,
-                    "token" : "12345678"
+                    "id" : 1
                 }
             }
 
@@ -520,7 +416,6 @@ Register new agent profile.
         + message (string, required) - Response message
         + data (object, required) - Response data
             + id (number, optional) - Agent ID
-            + token (string, optional) - Authentication token
     + Body
 
             {
@@ -529,7 +424,7 @@ Register new agent profile.
                 "data" : null
             }
 
-## Agent by ID [/agent/{id}{?auth}]
+## Agent by ID [/agent/{id}]
 
 + Parameters
     + id (number, required) - Agent ID
@@ -573,17 +468,6 @@ Update agent profile.
                 "message" : "Invalid data"
             }
 
-+ Response 401 (application/json)
-    + Attributes
-        + success (boolean, required) - Request status
-        + message (string, required) - Response message
-    + Body
-
-            {
-                "success" : false,
-                "message" : "Invalid authentication"
-            }
-
 + Response 404 (application/json)
     + Attributes
         + success (boolean, required) - Request status
@@ -610,17 +494,6 @@ Delete agent profile.
                 "message" : "OK"
             }
 
-+ Response 401 (application/json)
-    + Attributes
-        + success (boolean, required) - Request status
-        + message (string, required) - Response message
-    + Body
-
-            {
-                "success" : false,
-                "message" : "Invalid authentication"
-            }
-
 + Response 404 (application/json)
     + Attributes
         + success (boolean, required) - Request status
@@ -632,7 +505,7 @@ Delete agent profile.
                 "message" : "Invalid ID"
             }
 
-## Room - Public [/room]
+## Room [/room]
 
 ### Get Available Room Types [GET]
 
@@ -684,11 +557,6 @@ Get details of all available room types.
                     }
                 ]
             }
-
-## Room - Private [/room{?auth}]
-
-+ Parameters
-    + auth (string, required) - Authentication token
 
 ### Create Room [POST]
 
@@ -755,26 +623,9 @@ Create new room.
                 "data" : null
             }
 
-+ Response 401 (application/json)
-    + Attributes
-        + success (boolean, required) - Request status
-        + message (string, required) - Response message
-        + data (object, required) - Response data
-            + id (number, optional) - Room ID
-    + Body
-
-            {
-                "success" : false,
-                "message" : "Invalid authentication",
-                "data" : null
-            }
-
-
-
-## Room by ID [/room/{id}{?auth}]
+## Room by ID [/room/{id}]
 
 + Parameters
-    + auth (string, required) - Authentication token
     + id (number, required) - Room ID
 
 ### Get Room Info [GET]
@@ -817,38 +668,6 @@ Get room information.
                     "facilities" : [ "TV", "AC", "Internet", "Hot/Cold Water", "Refrigerator", "Safe Deposit Box", "Wardrobe" ],
                     "price" : 400000
                 }
-            }
-
-+ Response 401 (application/json)
-    + Attributes
-        + success (boolean, required) - Request status
-        + message (string, required) - Response message
-        + data (object, required) - Response data
-            + room_type (enum[string], optional) - Room type
-                + Members
-                    + "Single"
-                    + "Double"
-                    + "Family"
-            + description (string, required) - Room description
-            + facilities (array, required) - Room facilites
-                + (enum[string])
-                    + Members
-                        + "TV"
-                        + "AC"
-                        + "Internet"
-                        + "Hot/Cold Water"
-                        + "Refrigerator"
-                        + "Safe Deposit Box"
-                        + "Wardrobe"
-                        + "Window"
-                        + "Balcony"
-            + price (number, required) - Room price (IDR)
-    + Body
-
-            {
-                "success" : false,
-                "message" : "Invalid authentication",
-                "data" : null
             }
 
 + Response 404 (application/json)
@@ -896,17 +715,6 @@ Delete room.
             {
                 "success" : true,
                 "message" : "OK"
-            }
-
-+ Response 401 (application/json)
-    + Attributes
-        + success (boolean, required) - Request status
-        + message (string, required) - Response message
-    + Body
-
-            {
-                "success" : false,
-                "message" : "Invalid authentication"
             }
 
 + Response 404 (application/json)

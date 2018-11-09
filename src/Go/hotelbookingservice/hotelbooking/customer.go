@@ -18,8 +18,7 @@ type Profile struct {
 }
 
 type RegisterProfileResponseData struct {
-	ID    int    `json:"id"`
-	Token string `json:"token"`
+	ID int `json:"id"`
 }
 
 type RegisterProfileResponse struct {
@@ -38,7 +37,7 @@ func RegisterProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 	if err != nil {
 		log.Println("RegisterProfile :", err)
 
-		SendBadRequest(w, true)
+		SendBadRequestWithData(w)
 		return
 	}
 
@@ -47,42 +46,25 @@ func RegisterProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 	if err != nil {
 		log.Println("RegisterProfile :", err)
 
-		SendBadRequest(w, true)
+		SendBadRequestWithData(w)
 		return
 	}
 
 	if profile.Name == "" || profile.ID == "" || profile.Email == "" {
-		SendBadRequest(w, true)
+		SendBadRequestWithData(w)
 		return
 	}
 
-	token := GenerateToken(profile.Name)
-	authStatement, err := db.Prepare("INSERT INTO auth VALUES (0, ?, 'customer')")
+	statement, err := db.Prepare("INSERT INTO customer VALUES (0, ?, ?, ?)")
 
 	if err != nil {
 		log.Println("RegisterProfile :", err)
 		return
 	}
 
-	defer authStatement.Close()
+	defer statement.Close()
 
-	_, err = authStatement.Exec(token)
-
-	if err != nil {
-		log.Println("RegisterProfile :", err)
-		return
-	}
-
-	customerStatement, err := db.Prepare("INSERT INTO customer VALUES (0, ?, ?, ?, ?)")
-
-	if err != nil {
-		log.Println("RegisterProfile :", err)
-		return
-	}
-
-	defer customerStatement.Close()
-
-	res, err := customerStatement.Exec(profile.Name, profile.ID, profile.Email, token)
+	res, err := statement.Exec(profile.Name, profile.ID, profile.Email)
 
 	if err != nil {
 		log.Println("RegisterProfile :", err)
@@ -92,9 +74,43 @@ func RegisterProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 	id, _ := res.LastInsertId()
 
 	data := RegisterProfileResponseData{
-		ID:    int(id),
-		Token: token,
+		ID: int(id),
 	}
 
-	SendOK(w, data)
+	SendOKWithData(w, data)
+}
+
+func UpdateProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var profile Profile
+	body, err := ioutil.ReadAll(r.Body)
+
+	if err != nil {
+		log.Println("UpdateProfile :", err)
+
+		SendBadRequest(w)
+		return
+	}
+
+	err = json.Unmarshal(body, &profile)
+
+	if err != nil {
+		log.Println("UpdateProfile :", err)
+
+		SendBadRequest(w)
+		return
+	}
+	/*
+		id, err := strconv.Atoi(ps.ByName("id"))
+
+		if err != nil {
+			log.Println("UpdateProfile :", err)
+
+			SendNotFound(w)
+			return
+		}
+	*/
+	if profile.Name == "" && profile.ID == "" && profile.Email == "" {
+		SendOK(w)
+		return
+	}
 }

@@ -19,6 +19,11 @@ const (
 /* Types */
 
 type Response struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
+
+type DataResponse struct {
 	Success bool        `json:"success"`
 	Message string      `json:"message"`
 	Data    interface{} `json:"data"`
@@ -26,11 +31,10 @@ type Response struct {
 
 /* Functions */
 
-func SendOK(w http.ResponseWriter, data interface{}) {
+func SendOK(w http.ResponseWriter) {
 	response := Response{
 		Success: true,
 		Message: OK,
-		Data:    data,
 	}
 
 	json, err := json.Marshal(response)
@@ -45,25 +49,54 @@ func SendOK(w http.ResponseWriter, data interface{}) {
 	w.Write(json)
 }
 
-func SendBadRequest(w http.ResponseWriter, paramRequired bool) {
-	var message string
-
-	if paramRequired {
-		message = ERR_BAD_REQUEST_REQUIRED
-	} else {
-		message = ERR_BAD_REQUEST_OPTIONAL
+func SendOKWithData(w http.ResponseWriter, data interface{}) {
+	response := DataResponse{
+		Success: true,
+		Message: OK,
+		Data:    data,
 	}
 
+	json, err := json.Marshal(response)
+
+	if err != nil {
+		log.Println("SendOKWithData :", err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(json)
+}
+
+func SendBadRequest(w http.ResponseWriter) {
 	response := Response{
 		Success: false,
-		Message: message,
-		Data:    nil,
+		Message: ERR_BAD_REQUEST_OPTIONAL,
 	}
 
 	json, err := json.Marshal(response)
 
 	if err != nil {
 		log.Println("SendBadRequest :", err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(json)
+}
+
+func SendBadRequestWithData(w http.ResponseWriter) {
+	response := DataResponse{
+		Success: false,
+		Message: ERR_BAD_REQUEST_REQUIRED,
+		Data:    nil,
+	}
+
+	json, err := json.Marshal(response)
+
+	if err != nil {
+		log.Println("SendBadRequestWithData :", err)
 		return
 	}
 
@@ -76,7 +109,6 @@ func SendUnauthorized(w http.ResponseWriter) {
 	response := Response{
 		Success: false,
 		Message: ERR_AUTHENTICATION,
-		Data:    nil,
 	}
 
 	json, err := json.Marshal(response)
@@ -88,5 +120,61 @@ func SendUnauthorized(w http.ResponseWriter) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusUnauthorized)
+	w.Write(json)
+}
+
+func SendUnauthorizedWithData(w http.ResponseWriter) {
+	response := DataResponse{
+		Success: false,
+		Message: ERR_AUTHENTICATION,
+		Data:    nil,
+	}
+
+	json, err := json.Marshal(response)
+
+	if err != nil {
+		log.Println("SendUnauthorizedWithData :", err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusUnauthorized)
+	w.Write(json)
+}
+
+func SendNotFound(w http.ResponseWriter) {
+	response := Response{
+		Success: false,
+		Message: ERR_NOT_FOUND,
+	}
+
+	json, err := json.Marshal(response)
+
+	if err != nil {
+		log.Println("SendNotFound :", err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusNotFound)
+	w.Write(json)
+}
+
+func SendNotFoundWithData(w http.ResponseWriter) {
+	response := DataResponse{
+		Success: false,
+		Message: ERR_NOT_FOUND,
+		Data:    nil,
+	}
+
+	json, err := json.Marshal(response)
+
+	if err != nil {
+		log.Println("SendNotFoundWithData :", err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusNotFound)
 	w.Write(json)
 }
