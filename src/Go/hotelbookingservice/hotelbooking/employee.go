@@ -107,8 +107,6 @@ func UpdateEmployee(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 
 	if err != nil {
 		log.Println("UpdateEmployee :", err)
-
-		SendNotFound(w)
 		return
 	}
 

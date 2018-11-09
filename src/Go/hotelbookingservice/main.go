@@ -22,6 +22,7 @@ func main() {
 	router.DELETE("/employee/:id", hotelbooking.DeleteEmployee)
 
 	router.POST("/agent", hotelbooking.RegisterAgent)
+	router.PUT("/agent/:id", hotelbooking.UpdateAgent)
 
 	log.Fatal(http.ListenAndServe(":8060", router))
 }

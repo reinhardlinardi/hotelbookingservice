@@ -107,8 +107,6 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 
 	if err != nil {
 		log.Println("UpdateProfile :", err)
-
-		SendNotFound(w)
 		return
 	}
 
