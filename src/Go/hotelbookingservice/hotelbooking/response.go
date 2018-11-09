@@ -29,7 +29,7 @@ type Response struct {
 func SendOK(w http.ResponseWriter, data interface{}) {
 	response := Response{
 		Success: true,
-		Message: "OK",
+		Message: OK,
 		Data:    data,
 	}
 
@@ -69,5 +69,24 @@ func SendBadRequest(w http.ResponseWriter, paramRequired bool) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusBadRequest)
+	w.Write(json)
+}
+
+func SendUnauthorized(w http.ResponseWriter) {
+	response := Response{
+		Success: false,
+		Message: ERR_AUTHENTICATION,
+		Data:    nil,
+	}
+
+	json, err := json.Marshal(response)
+
+	if err != nil {
+		log.Println("SendUnauthorized :", err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusUnauthorized)
 	w.Write(json)
 }

@@ -56,7 +56,7 @@ func RegisterProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 		return
 	}
 
-	token := GenerateToken(profile.Email)
+	token := GenerateToken(profile.Name)
 	authStatement, err := db.Prepare("INSERT INTO auth VALUES (0, ?, 'customer')")
 
 	if err != nil {

@@ -15,7 +15,7 @@ Register new customer profile.
     + Attributes
         + name (string, required) - Customer name
         + id (string, required) - Customer ID or passport
-        + email (string, required) - Customer email (must be unique)
+        + email (string, required) - Customer email
     + Body
         
             {
@@ -58,57 +58,6 @@ Register new customer profile.
                 "data" : null
             }
 
-## Customer - Private [/customer{?auth,email}]
-
-+ Parameters
-    + auth (string, required) - Authentication token
-    + email (string, optional) - Filter by email
-
-### Get All Profiles [GET]
-
-Get all customer profiles with optional filters.
-
-+ Response 200 (application/json)
-    + Attributes
-        + success (boolean, required) - Request status
-        + message (string, required) - Response message
-        + data (array, required) - Array of customer data
-            + (object, optional) - Customer data
-                + name (string, required) - Customer name
-                + id (string, required) - Customer ID or passport
-                + email (string, required) - Customer email (must be unique)
-    + Body
-    
-            {
-                "success" : true,
-                "message" : "OK",
-                "data" :
-                [
-                    {
-                        "name" : "Cisco",
-                        "id" : "123456789012345",
-                        "email" : "cisco@std.stei.itb.ac.id"
-                    }
-                ]
-            }
-            
-+ Response 401 (application/json)
-    + Attributes
-        + success (boolean, required) - Request status
-        + message (string, required) - Response message
-        + data (array, required) - Array of customer data
-            + (object, optional) - Customer data
-                + name (string, required) - Customer name
-                + id (string, required) - Customer ID or passport
-                + email (string, required) - Customer email (must be unique)
-    + Body
-    
-            {
-                "success" : false,
-                "message" : "Invalid authentication",
-                "data" : null
-            }
-
 ## Customer by ID [/customer/{id}{?auth}]
 
 + Parameters
@@ -123,7 +72,7 @@ Update customer profile.
     + Attributes
         + name (string, optional) - Customer name
         + id (string, optional) - Customer ID or passport
-        + email (string, optional) - Customer email (must be unique)
+        + email (string, optional) - Customer email
     + Body
 
             {

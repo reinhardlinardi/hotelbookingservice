@@ -7,10 +7,10 @@ SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 SET NAMES utf8mb4;
 
+DROP DATABASE IF EXISTS `hotel_booking`;
 CREATE DATABASE `hotel_booking` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `hotel_booking`;
 
-DROP TABLE IF EXISTS `agent`;
 CREATE TABLE `agent` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -23,7 +23,6 @@ CREATE TABLE `agent` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-DROP TABLE IF EXISTS `auth`;
 CREATE TABLE `auth` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `token` varchar(100) NOT NULL,
@@ -35,7 +34,6 @@ CREATE TABLE `auth` (
 INSERT INTO `auth` (`id`, `token`, `type`) VALUES
 (1,	'1fddc37a',	'hotel');
 
-DROP TABLE IF EXISTS `customer`;
 CREATE TABLE `customer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -43,13 +41,11 @@ CREATE TABLE `customer` (
   `email` varchar(100) NOT NULL,
   `token` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`),
   KEY `token` (`token`),
   CONSTRAINT `customer_ibfk_2` FOREIGN KEY (`token`) REFERENCES `auth` (`token`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-DROP TABLE IF EXISTS `employee`;
 CREATE TABLE `employee` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -59,7 +55,6 @@ CREATE TABLE `employee` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-DROP TABLE IF EXISTS `invoice`;
 CREATE TABLE `invoice` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `room_id` int(11) NOT NULL,
@@ -77,7 +72,6 @@ CREATE TABLE `invoice` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-DROP TABLE IF EXISTS `room`;
 CREATE TABLE `room` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(100) NOT NULL,
@@ -100,4 +94,4 @@ INSERT INTO `room` (`id`, `type`, `description`, `tv`, `ac`, `internet`, `water`
 (2,	'Double',	'Kamar untuk dua orang dengan double bed yang luas dan nyaman, dengan fasilitas lengkap dan pemandangan langsung ke kolam renang.',	1,	1,	1,	1,	1,	1,	1,	1,	0,	400000),
 (3,	'Family',	'Kamar untuk satu keluarga yang luas dan nyaman, dengan fasilitas lengkap, sliding window, dan private balcony.',	1,	1,	1,	1,	1,	1,	1,	1,	1,	800000);
 
--- 2018-11-08 07:28:30
+-- 2018-11-09 00:28:20

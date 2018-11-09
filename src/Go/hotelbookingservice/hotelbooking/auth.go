@@ -43,10 +43,10 @@ func GetHotelAuthToken() {
 	hotelAuthToken = token
 }
 
-func GenerateToken(email string) string {
+func GenerateToken(name string) string {
 	currentMillis := time.Now().UnixNano() / int64(time.Millisecond)
 
-	hash := crc32.ChecksumIEEE([]byte(email + ":" + strconv.FormatInt(currentMillis, 10)))
+	hash := crc32.ChecksumIEEE([]byte(name + ":" + strconv.FormatInt(currentMillis, 10)))
 	token := fmt.Sprintf("%x", hash)
 
 	return token
