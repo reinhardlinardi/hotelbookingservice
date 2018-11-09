@@ -24,8 +24,8 @@
   <message name="validatePaymentResponse">
     <part name="parameters" element="tns:validatePaymentResponse"/>
   </message>
-  <portType name="HotelBookingImplementation">
-    <operation name="orderRoom">
+  <portType name="HotelBooking">
+    <operation name="book">
       <input ns1:Action="http://booking/HotelBooking/bookRequest" message="tns:book" xmlns:ns1="http://www.w3.org/2007/05/addressing/metadata"/>
       <output ns2:Action="http://booking/HotelBooking/bookResponse" message="tns:bookResponse" xmlns:ns2="http://www.w3.org/2007/05/addressing/metadata"/>
     </operation>
@@ -33,7 +33,7 @@
       <input ns3:Action="http://booking/HotelBooking/cancelRequest" message="tns:cancel" xmlns:ns3="http://www.w3.org/2007/05/addressing/metadata"/>
       <output ns4:Action="http://booking/HotelBooking/cancelResponse" message="tns:cancelResponse" xmlns:ns4="http://www.w3.org/2007/05/addressing/metadata"/>
     </operation>
-    <operation name="confirmPayment">
+    <operation name="validatePayment">
       <input ns5:Action="http://booking/HotelBooking/validatePaymentRequest" message="tns:validatePayment" xmlns:ns5="http://www.w3.org/2007/05/addressing/metadata"/>
       <output ns6:Action="http://booking/HotelBooking/validatePaymentResponse" message="tns:validatePaymentResponse" xmlns:ns6="http://www.w3.org/2007/05/addressing/metadata"/>
     </operation>

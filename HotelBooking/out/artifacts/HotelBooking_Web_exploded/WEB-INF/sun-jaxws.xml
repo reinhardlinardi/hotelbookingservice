@@ -4,6 +4,6 @@
 
     <endpoint
             name='HotelBooking'
-            implementation='hotelbooking.HotelBookingImplementation'
+            implementation='hotelbooking.HotelBooking'
             url-pattern='/services/HotelBooking'/>
 </endpoints>
