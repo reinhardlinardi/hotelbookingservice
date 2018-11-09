@@ -18,6 +18,7 @@ func main() {
 	router.PUT("/customer/:id", hotelbooking.UpdateProfile)
 
 	router.POST("/employee", hotelbooking.AddEmployee)
+	router.PUT("/employee/:id", hotelbooking.UpdateEmployee)
 
 	log.Fatal(http.ListenAndServe(":8060", router))
 }
