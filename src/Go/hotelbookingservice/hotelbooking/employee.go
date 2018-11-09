@@ -165,8 +165,6 @@ func DeleteEmployee(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 
 	if err != nil {
 		log.Println("DeleteEmployee :", err)
-
-		SendNotFound(w)
 		return
 	}
 

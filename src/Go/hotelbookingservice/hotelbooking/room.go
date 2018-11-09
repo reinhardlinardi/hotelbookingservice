@@ -115,8 +115,6 @@ func GetRoomInfo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if err != nil {
 		log.Println("GetRoomInfo :", err)
-
-		SendNotFoundWithData(w)
 		return
 	}
 
@@ -149,8 +147,6 @@ func DeleteRoom(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if err != nil {
 		log.Println("DeleteRoom :", err)
-
-		SendNotFound(w)
 		return
 	}
 

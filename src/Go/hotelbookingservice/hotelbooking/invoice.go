@@ -143,8 +143,6 @@ func UpdateInvoicePaymentStatus(w http.ResponseWriter, r *http.Request, ps httpr
 
 	if err != nil {
 		log.Println("UpdateInvoicePaymentStatus :", err)
-
-		SendNotFound(w)
 		return
 	}
 
@@ -171,6 +169,52 @@ func UpdateInvoicePaymentStatus(w http.ResponseWriter, r *http.Request, ps httpr
 
 	if err != nil {
 		log.Println("UpdateInvoicePaymentStatus :", err)
+		return
+	}
+
+	SendOK(w)
+}
+
+func CancelInvoice(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id, err := strconv.Atoi(ps.ByName("id"))
+
+	if err != nil {
+		log.Println("CancelInvocie :", err)
+
+		SendNotFound(w)
+		return
+	}
+
+	statement, err := db.Prepare("SELECT id FROM invoice WHERE id = ?")
+
+	if err != nil {
+		log.Println("CancelInvoice :", err)
+		return
+	}
+
+	defer statement.Close()
+
+	var dummy int
+	err = statement.QueryRow(id).Scan(&dummy)
+
+	if err != nil {
+		log.Println("CancelInvoice :", err)
+
+		SendNotFound(w)
+		return
+	}
+
+	statement, err = db.Prepare("UPDATE invoice SET cancelled = 1 WHERE id = ?")
+
+	if err != nil {
+		log.Println("CancelInvoice :", err)
+		return
+	}
+
+	_, err = statement.Exec(id)
+
+	if err != nil {
+		log.Println("CancelInvoice :", err)
 		return
 	}
 

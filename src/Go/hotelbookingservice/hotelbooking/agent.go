@@ -182,8 +182,6 @@ func DeleteAgent(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if err != nil {
 		log.Println("DeleteAgent :", err)
-
-		SendNotFound(w)
 		return
 	}
 
