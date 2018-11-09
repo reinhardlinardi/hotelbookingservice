@@ -107,7 +107,7 @@ func GetRoomInfo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if err != nil {
 		log.Println("GetRoomInfo :", err)
 
-		SendNotFound(w)
+		SendNotFoundWithData(w)
 		return
 	}
 
@@ -116,7 +116,7 @@ func GetRoomInfo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if err != nil {
 		log.Println("GetRoomInfo :", err)
 
-		SendNotFound(w)
+		SendNotFoundWithData(w)
 		return
 	}
 
@@ -128,7 +128,7 @@ func GetRoomInfo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if err != nil {
 		log.Println("GetRoomInfo :", err)
 
-		SendNotFound(w)
+		SendNotFoundWithData(w)
 		return
 	}
 
