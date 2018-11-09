@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/julienschmidt/httprouter"
@@ -98,4 +99,38 @@ func CreateRoom(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	SendOKWithData(w, data)
+}
+
+func GetRoomInfo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id, err := strconv.Atoi(ps.ByName("id"))
+
+	if err != nil {
+		log.Println("GetRoomInfo :", err)
+
+		SendNotFound(w)
+		return
+	}
+
+	statement, err := db.Prepare("SELECT type, description, tv, ac, internet, water, refrigerator, deposit_box, wardrobe, window, balcony, price FROM room WHERE id = ?")
+
+	if err != nil {
+		log.Println("GetRoomInfo :", err)
+
+		SendNotFound(w)
+		return
+	}
+
+	defer statement.Close()
+
+	var room Room
+	err = statement.QueryRow(id).Scan(&room.RoomType, &room.Description, &room.TV, &room.AC, &room.Internet, &room.HotWater, &room.Refrigerator, &room.SafeDepositBox, &room.Wardrobe, &room.Window, &room.Balcony, &room.Price)
+
+	if err != nil {
+		log.Println("GetRoomInfo :", err)
+
+		SendNotFound(w)
+		return
+	}
+
+	SendOKWithData(w, room)
 }
