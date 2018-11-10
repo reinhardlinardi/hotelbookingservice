@@ -142,7 +142,7 @@ func GetAvailableRooms(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 }
 */
 func GetRoomInfo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	re, _ := regexp.Compile("\\?.+$")
+	re, _ := regexp.Compile("\\?.*$")
 
 	if re.MatchString(r.URL.String()) {
 		GetRoomAvailability(w, r, ps)

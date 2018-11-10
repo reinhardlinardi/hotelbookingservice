@@ -785,3 +785,61 @@ Delete room.
                 "success" : false,
                 "message" : "Invalid ID"
             }
+
+## Room by ID and Date [/room/{id}{?in,out}]
+
++ Parameters
+    + id (number, required) - Room ID
+    + in (string, required) - Check in date (DD-MM-YYYY)
+    + out (string, required) - Check out date (DD-MM-YYYY)
+
+### Get Room Availability [GET]
+
+Get room availability between check in date and check out date.
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + available (boolean, optional) - Room availability
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK",
+                "data" :
+                {
+                    "available" : true
+                }
+            }
+
++ Response 400 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + available (boolean, optional) - Room availability
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Missing required parameters or invalid data",
+                "data" : null
+            }
+
++ Response 404 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response data
+        + data (object, required) - Response data
+            + available (boolean, optional) - Room availability
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Invalid ID",
+                "data" : null
+            }
+
+
