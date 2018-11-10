@@ -26,7 +26,7 @@ func main() {
 	router.DELETE("/agent/:id", hotelbooking.DeleteAgent)
 
 	router.POST("/room", hotelbooking.CreateRoom)
-	router.GET("/room", hotelbooking.GetAvailableRooms)
+	//router.GET("/room", hotelbooking.GetAvailableRooms)
 	router.GET("/room/:id", hotelbooking.GetRoomInfo)
 	router.DELETE("/room/:id", hotelbooking.DeleteRoom)
 
