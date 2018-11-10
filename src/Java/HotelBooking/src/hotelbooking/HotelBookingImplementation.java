@@ -47,6 +47,8 @@ public class HotelBookingImplementation implements HotelBooking {
     @Override
     public int confirmPayment(int booking_id, long price, String payer_name, int payment_type) {
         /* Calls Payment Gateway's External API */
+
+        /* if payment is confirmed, change internal booking database */
         return 0;
     }
 

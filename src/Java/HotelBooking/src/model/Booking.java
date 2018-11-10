@@ -10,7 +10,7 @@ public class Booking {
     RoomType roomType;
     Date checkInDate;
     Date checkOutDate;
-    Guest guest;
+    Customer customer;
 
     /* Methods */
 
