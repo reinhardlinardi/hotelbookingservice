@@ -2,6 +2,7 @@ package hotelbooking
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -16,6 +17,7 @@ import (
 /* Types */
 
 type Room struct {
+	ID             int     `json:"id,omitempty"`
 	RoomType       *string `json:"room_type"`
 	Description    *string `json:"description"`
 	TV             *bool   `json:"tv"`
@@ -36,6 +38,18 @@ type CreateRoomResponseData struct {
 
 type GetRoomAvailabilityResponseData struct {
 	Available bool `json:"available"`
+}
+
+type GetRoomAvailabilityResponse struct {
+	Success bool                            `json:"success"`
+	Message string                          `json:"message"`
+	Data    GetRoomAvailabilityResponseData `json:"data"`
+}
+
+type GetRoomInfoResponse struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+	Data    Room   `json:"data"`
 }
 
 /* Helper */
@@ -107,7 +121,6 @@ func CreateRoom(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	SendOKWithData(w, data)
 }
 
-/*
 func GetAvailableRooms(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	checkInStr := r.URL.Query().Get("in")
 	checkOutStr := r.URL.Query().Get("out")
@@ -138,9 +151,75 @@ func GetAvailableRooms(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 		return
 	}
 
-	// Buat masing2 room ID, panggil API buat cek room sekian available dari tanggal check in smpe tanggal check out
+	defer statement.Close()
+
+	var availability GetRoomAvailabilityResponse
+	result := []Room{}
+	rows, _ := statement.Query()
+
+	for rows.Next() {
+		var id int
+		err = rows.Scan(&id)
+
+		if err != nil {
+			log.Println("GetAvailableRooms :", err)
+			return
+		}
+
+		url := fmt.Sprintf("http://localhost:8060/room/%d?in=%s&out=%s", id, checkInStr, checkOutStr)
+		res, err := http.Get(url)
+
+		if err != nil {
+			log.Println("GetAvailableRooms :", err)
+			return
+		}
+
+		body, err := ioutil.ReadAll(res.Body)
+
+		if err != nil {
+			log.Println("GetAvailableRooms :", err)
+			return
+		}
+
+		err = json.Unmarshal(body, &availability)
+
+		if err != nil {
+			log.Println("GetAvailableRooms :", err)
+			return
+		}
+
+		if availability.Data.Available {
+			url = fmt.Sprintf("http://localhost:8060/room/%d", id)
+			res, err = http.Get(url)
+
+			if err != nil {
+				log.Println("GetAvailableRooms :", err)
+				return
+			}
+
+			body, err = ioutil.ReadAll(res.Body)
+
+			if err != nil {
+				log.Println("GetAvailableRooms :", err)
+				return
+			}
+
+			var roomInfo GetRoomInfoResponse
+			err = json.Unmarshal(body, &roomInfo)
+
+			if err != nil {
+				log.Println("GetAvailableRooms :", err)
+				return
+			}
+
+			roomInfo.Data.ID = id
+			result = append(result, roomInfo.Data)
+		}
+	}
+
+	SendOKWithData(w, result)
 }
-*/
+
 func GetRoomInfo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	re, _ := regexp.Compile("\\?.*$")
 
@@ -285,8 +364,8 @@ func GetRoomAvailability(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 	var invoiceInStr, invoiceOutStr string
 	var invoiceIn, invoiceOut time.Time
-	var available bool
 
+	available := true
 	rows, _ := statement.Query(id)
 
 	for rows.Next() {
@@ -301,7 +380,6 @@ func GetRoomAvailability(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		invoiceOut, _ = time.Parse("2006-01-02", invoiceOutStr)
 
 		if checkIn.Before(invoiceIn) && (checkOut.Before(invoiceIn) || checkOut.Equal(invoiceIn)) {
-			available = true
 			break
 		} else if checkIn.Before(invoiceIn) && checkOut.After(invoiceIn) {
 			available = false
