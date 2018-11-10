@@ -1,6 +1,7 @@
 package hotelbooking;
 
 import helper.RestHandler;
+import model.Customer;
 import model.Invoice;
 import org.json.JSONObject;
 
@@ -15,6 +16,16 @@ public class HotelBookingImplementation implements HotelBooking {
 
     @Override
     public int orderRoom(String name, String id_card, String email, int room_type_id, String check_in, String check_out) {
+        /* creates invoice */
+        Customer customer = new Customer();
+        customer.setIdentity(id_card);
+        customer.setEmail(email);
+        customer.setName(name);
+
+        /* calls payment validation */
+
+        /* update invoice or delete invoice */
+
         return 0;
     }
 
