@@ -5,6 +5,7 @@ import model.Invoice;
 import org.json.JSONObject;
 
 import javax.jws.WebService;
+import java.util.Date;
 
 @WebService(endpointInterface = "hotelbooking.HotelBooking")
 public class HotelBookingImplementation implements HotelBooking {
@@ -19,21 +20,33 @@ public class HotelBookingImplementation implements HotelBooking {
 
     @Override
     public int cancel(int bookingId) {
+        int statusCode;
         /* Get Booking Data */
-        String getInvoiceURL = "http://localhost:8060/invoice/"+bookingId;
-        JSONObject invoiceJSON = rh.getRestObject(getInvoiceURL,"GET");
-        Invoice invoice = new Invoice(
-                
-        );
-        /* Check if time of request >12 hrs of booking time */
+        String url = "http://localhost:8060/invoice/"+bookingId;
+        JSONObject invoiceJSON = rh.getRestObject(url,"GET");
+        JSONObject dataJSON = invoiceJSON.getJSONObject("data");
+        Invoice invoice = new Invoice();
+        invoice.setId(bookingId);
+        invoice.fillFromJSON(dataJSON);
+        invoice.printInvoice();
 
-        /* cancel booking */
-
-        return 2;
+        /* Check if time of cancellation request > 1 day of booking time itinerary */
+        Date now = new Date();
+        long difference =  (invoice.getInDate().getTime()-now.getTime())/86400000;
+        if(Math.abs(difference) >= 1){
+            /* cancellation cancelled */
+            statusCode = 0;
+        } else {
+            /* cancel booking */
+            rh.deleteRESTRequest(url);
+            statusCode = 1;
+        }
+        return statusCode;
     }
 
     @Override
     public int confirmPayment(int booking_id, long price, String payer_name, int payment_type) {
+        /* Calls Payment Gateway's External API */
         return 0;
     }
 
