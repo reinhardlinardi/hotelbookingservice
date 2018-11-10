@@ -1,4 +1,6 @@
-package hotelbooking;
+package helper;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,13 +9,22 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class RestClient {
-    public static void main(String[] argv){
+public class RestHandler {
+    public RestHandler(){}
+
+    /*
+    input:
+    url = url
+    method = GET, POST, etc
+    output: JSONObject
+     */
+    public JSONObject getRestObject(String in_url, String method){
+        JSONObject jsonObject = null;
 
         try{
-            URL url = new URL("http://localhost:8060/room/1");
+            URL url = new URL(in_url);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
+            conn.setRequestMethod(method);
             conn.setRequestProperty("Accept","application/json");
 
             if(conn.getResponseCode() != 200){
@@ -24,10 +35,11 @@ public class RestClient {
 
             String output;
 
+
             System.out.println("Output from server...\n");
             while ((output = br.readLine())!= null){
                 System.out.println(output);
-//                JSONObject jsonObject = new JSONObject(output);
+                jsonObject = new JSONObject(output);
             }
 
             conn.disconnect();
@@ -36,5 +48,7 @@ public class RestClient {
         } catch(IOException e) {
             e.printStackTrace();
         }
+
+        return(jsonObject);
     }
 }

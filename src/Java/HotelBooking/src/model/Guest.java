@@ -1,4 +1,4 @@
-package hotelbooking;
+package model;
 
 public class Guest {
 

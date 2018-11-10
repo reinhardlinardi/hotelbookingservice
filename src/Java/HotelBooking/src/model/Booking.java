@@ -1,4 +1,4 @@
-package hotelbooking;
+package model;
 
 import java.util.Date;
 

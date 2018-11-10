@@ -12,10 +12,10 @@ public class HotelBookingClient {
 
         qname = new QName("http://hotelbooking/","HotelBookingImplementationPort");
 
-        HotelBookingInterface hbi = service.getPort(qname,HotelBookingInterface.class);
+        HotelBooking hb = service.getPort(qname, HotelBooking.class);
 
-        System.out.println("CancelRoom = "+hbi.cancel(0));
-        System.out.println("Book Room = "+hbi.orderRoom("A","A","A",15,"A","A"));
-        System.out.println("Validate Payment = "+hbi.confirmPayment(1,2,"A",3));
+        System.out.println("CancelRoom = "+hb.cancel(0));
+        System.out.println("Book Room = "+hb.orderRoom("A","A","A",15,"A","A"));
+        System.out.println("Validate Payment = "+hb.confirmPayment(1,2,"A",3));
     }
 }

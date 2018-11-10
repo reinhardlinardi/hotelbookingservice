@@ -4,7 +4,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 @WebService
-public interface HotelBookingInterface {
+public interface HotelBooking {
     @WebMethod int orderRoom(String name, String id_card, String email, int room_type_id, String check_in, String check_out);
     /*
     input:

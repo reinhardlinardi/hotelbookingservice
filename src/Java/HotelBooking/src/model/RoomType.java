@@ -1,4 +1,4 @@
-package hotelbooking;
+package model;
 public enum RoomType {
 
     /* Enumerations */
