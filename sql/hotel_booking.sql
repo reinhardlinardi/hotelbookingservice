@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 10, 2018 at 09:45 AM
+-- Generation Time: Nov 10, 2018 at 11:14 AM
 -- Server version: 10.1.19-MariaDB
 -- PHP Version: 5.6.28
 
@@ -46,6 +46,13 @@ CREATE TABLE `customer` (
   `email` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `customer`
+--
+
+INSERT INTO `customer` (`id`, `name`, `identity`, `email`) VALUES
+(1, 'Francisco', 'HUEHUEHUE', 'francisco@example.com');
+
 -- --------------------------------------------------------
 
 --
@@ -69,12 +76,19 @@ CREATE TABLE `invoice` (
   `id` int(11) NOT NULL,
   `room_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
-  `in_date` datetime NOT NULL,
-  `out_date` datetime NOT NULL,
+  `in_date` date NOT NULL,
+  `out_date` date NOT NULL,
   `price` int(11) NOT NULL,
   `paid` tinyint(4) NOT NULL,
   `cancelled` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `invoice`
+--
+
+INSERT INTO `invoice` (`id`, `room_id`, `customer_id`, `in_date`, `out_date`, `price`, `paid`, `cancelled`) VALUES
+(4, 1, 1, '2018-11-14', '2018-11-14', 500000, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -156,7 +170,7 @@ ALTER TABLE `agent`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `employee`
 --
@@ -166,7 +180,7 @@ ALTER TABLE `employee`
 -- AUTO_INCREMENT for table `invoice`
 --
 ALTER TABLE `invoice`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `room`
 --
