@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 10, 2018 at 11:14 AM
+-- Generation Time: Nov 11, 2018 at 04:47 PM
 -- Server version: 10.1.19-MariaDB
 -- PHP Version: 5.6.28
 
@@ -51,7 +51,11 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`id`, `name`, `identity`, `email`) VALUES
-(1, 'Francisco', 'HUEHUEHUE', 'francisco@example.com');
+(1, 'Francisco', 'HUEHUEHUE', 'francisco@example.com'),
+(2, 'Tasya', '12345', 'tasya@example.com'),
+(3, 'reinhard', '12345', 'reinhard@example.com'),
+(4, 'ReinhardCarry', '12345', 'reinhardcarry@example.com'),
+(5, 'PPLS MATA PANCING', '12345', 'ppls@example.com');
 
 -- --------------------------------------------------------
 
@@ -88,7 +92,21 @@ CREATE TABLE `invoice` (
 --
 
 INSERT INTO `invoice` (`id`, `room_id`, `customer_id`, `in_date`, `out_date`, `price`, `paid`, `cancelled`) VALUES
-(4, 1, 1, '2018-11-14', '2018-11-14', 500000, 0, 0);
+(4, 1, 1, '2018-11-21', '2018-11-22', 500000, 1, 0),
+(5, 2, 1, '2018-11-12', '2018-11-13', 200000, 1, 0),
+(6, 3, 1, '2018-11-10', '2018-11-11', 1000000, 0, 1),
+(7, 3, 4, '2018-11-14', '2018-11-15', 800000, 0, 0),
+(8, 3, 4, '2018-11-14', '2018-11-15', 800000, 0, 0),
+(9, 3, 4, '2018-11-14', '2018-11-15', 800000, 0, 0),
+(10, 3, 5, '2018-11-14', '2018-11-15', 800000, 0, 0),
+(11, 3, 5, '2018-11-14', '2018-11-15', 800000, 0, 0),
+(12, 3, 5, '2018-11-14', '2018-11-15', 800000, 0, 0),
+(13, 3, 5, '2018-11-14', '2018-11-15', 800000, 0, 0),
+(14, 3, 1, '2018-11-20', '2018-11-21', 800000, 0, 0),
+(15, 3, 1, '2018-11-20', '2018-11-21', 800000, 0, 0),
+(16, 3, 1, '2018-11-20', '2018-11-21', 800000, 0, 0),
+(17, 3, 1, '2018-11-20', '2018-11-21', 800000, 0, 0),
+(18, 3, 3, '2018-11-25', '2018-11-26', 800000, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -170,7 +188,7 @@ ALTER TABLE `agent`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `employee`
 --
@@ -180,7 +198,7 @@ ALTER TABLE `employee`
 -- AUTO_INCREMENT for table `invoice`
 --
 ALTER TABLE `invoice`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 --
 -- AUTO_INCREMENT for table `room`
 --
