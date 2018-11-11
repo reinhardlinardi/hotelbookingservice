@@ -1,5 +1,6 @@
 package hotelbooking;
 
+import helper.DBHandler;
 import helper.RestHandler;
 import model.Customer;
 import model.Invoice;
@@ -16,15 +17,52 @@ public class HotelBookingImplementation implements HotelBooking {
 
     @Override
     public int orderRoom(String name, String id_card, String email, int room_type_id, String check_in, String check_out) {
-        /* creates invoice */
+        RestHandler rh = new RestHandler();
+        DBHandler dh = new DBHandler("root","");
+
+        /* creates customer object and fills it */
         Customer customer = new Customer();
         customer.setIdentity(id_card);
         customer.setEmail(email);
         customer.setName(name);
 
+        int id_cust = dh.getCustomerId(name,email,id_card);
+        if(id_cust == -999){
+            /* if customer hasn't, register a new entity */
+            String cust_register_url = "http://localhost:8060/customer";
+            JSONObject customerToSend = new JSONObject();
+            customerToSend.put("name",customer.getName());
+            customerToSend.put("id",customer.getIdentity());
+            customerToSend.put("email",customer.getEmail());
+            rh.POSTRequest(cust_register_url,customerToSend);
+            /* sets the new id customer, get it from database */
+            id_cust = dh.getCustomerId(name,email,id_card);
+        }
+
+        /* checks if customer is already registered */
+        customer.setId(id_cust);
+
+        JSONObject objectToSend = new JSONObject();
+        objectToSend.put("room_id",room_type_id);
+        objectToSend.put("customer_id",customer.getId());
+        objectToSend.put("in",check_in);
+        objectToSend.put("out",check_out);
+
+        String url = "http://localhost:8060/invoice/";
+        rh.POSTRequest(url,objectToSend);
+
         /* calls payment validation */
+        int respond;
+
+        /* dummy */
+        respond = 1;
 
         /* update invoice or delete invoice */
+        if(respond == 1){
+
+        } else {
+
+        }
 
         return 0;
     }
@@ -57,10 +95,17 @@ public class HotelBookingImplementation implements HotelBooking {
 
     @Override
     public int confirmPayment(int booking_id, long price, String payer_name, int payment_type) {
+        int status;
         /* Calls Payment Gateway's External API */
+        boolean dummy_resp = true;
 
         /* if payment is confirmed, change internal booking database */
-        return 0;
+        if(dummy_resp){
+            status = 1;
+        } else {
+            status = 0;
+        }
+        return status;
     }
 
 
