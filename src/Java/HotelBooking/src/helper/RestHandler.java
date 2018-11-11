@@ -98,7 +98,7 @@ public class RestHandler {
             os.write(input.getBytes());
             os.flush();
 
-            if(conn.getResponseCode() != HttpURLConnection.HTTP_CREATED){
+            if(conn.getResponseCode() != HttpURLConnection.HTTP_CREATED && conn.getResponseCode() != HttpURLConnection.HTTP_ACCEPTED && conn.getResponseCode() != HttpURLConnection.HTTP_OK){
                 throw new RuntimeException("Failed : HTTP error code : "+ conn.getResponseCode());
             }
 
@@ -114,6 +114,35 @@ public class RestHandler {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateInvoice(String in_url, int id){
+        try{
+            URL url = new URL(in_url + id);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Accept","application/json");
+
+            if(conn.getResponseCode() != HttpURLConnection.HTTP_CREATED && conn.getResponseCode() != HttpURLConnection.HTTP_ACCEPTED && conn.getResponseCode() != HttpURLConnection.HTTP_OK){
+                throw new RuntimeException("Failed : HTTP error code : "+conn.getResponseCode());
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+            String output;
+
+            System.out.println("Output from server...\n");
+            while ((output = br.readLine())!= null){
+                System.out.println(output);
+            }
+
+            conn.disconnect();
+        } catch(MalformedURLException e){
+            e.printStackTrace();
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }

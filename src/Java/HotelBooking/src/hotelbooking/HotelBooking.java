@@ -5,7 +5,7 @@ import javax.jws.WebService;
 
 @WebService
 public interface HotelBooking {
-    @WebMethod int orderRoom(String name, String id_card, String email, int room_type_id, String check_in, String check_out);
+    @WebMethod int orderRoom(String name, String id_card, String email, int room_type_id, String check_in, String check_out) throws Exception;
     /*
     input:
     name (String)

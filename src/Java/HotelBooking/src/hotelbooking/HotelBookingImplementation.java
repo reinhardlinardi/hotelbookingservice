@@ -7,6 +7,10 @@ import model.Invoice;
 import org.json.JSONObject;
 
 import javax.jws.WebService;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 
 @WebService(endpointInterface = "hotelbooking.HotelBooking")
@@ -16,7 +20,7 @@ public class HotelBookingImplementation implements HotelBooking {
     /* Web services */
 
     @Override
-    public int orderRoom(String name, String id_card, String email, int room_type_id, String check_in, String check_out) {
+    public int orderRoom(String name, String id_card, String email, int room_type_id, String check_in, String check_out) throws Exception{
         RestHandler rh = new RestHandler();
         DBHandler dh = new DBHandler("root","");
 
@@ -48,23 +52,21 @@ public class HotelBookingImplementation implements HotelBooking {
         objectToSend.put("in",check_in);
         objectToSend.put("out",check_out);
 
-        String url = "http://localhost:8060/invoice/";
+        String url = "http://localhost:8060/invoice";
         rh.POSTRequest(url,objectToSend);
 
         /* calls payment validation */
         int respond;
+        URL ServiceURL = new URL("http://localhost:8080/services/HotelBooking?wsdl");
+        QName qname = new QName("http://hotelbooking/","HotelBookingImplementationService");
+        Service service = Service.create(ServiceURL,qname);
+        qname = new QName("http://hotelbooking/","HotelBookingImplementationPort");
 
-        /* dummy */
-        respond = 1;
+        HotelBooking hb = service.getPort(qname, HotelBooking.class);
 
-        /* update invoice or delete invoice */
-        if(respond == 1){
+        respond = hb.confirmPayment(5,500000,customer.getName(),3);
 
-        } else {
-
-        }
-
-        return 0;
+        return respond;
     }
 
     @Override
@@ -95,15 +97,30 @@ public class HotelBookingImplementation implements HotelBooking {
 
     @Override
     public int confirmPayment(int booking_id, long price, String payer_name, int payment_type) {
-        int status;
-        /* Calls Payment Gateway's External API */
-        boolean dummy_resp = true;
+        int status = 0;
+        long startTime = System.currentTimeMillis();
+        long elapsedTime = 0;
+        boolean dummy_resp = false;
+        RestHandler rh = new RestHandler();
+
+//        while(elapsedTime<1000*60*60 || status == 0){
+//            long timer = 0;
+//            long startTimer = System.currentTimeMillis();
+//            while(timer<1000*60){
+//                timer = ((new Date()).getTime() - startTimer);
+//            }
+//            System.out.println("Calls Payment Gateway's External API");
+//            /* Calls Payment Gateway's External API */
+//            /* if within 1 hour the payment gateway doesn't confirm payment */
+//            elapsedTime = ((new Date()).getTime() - startTime);
+//        }
+
+        dummy_resp = true;
 
         /* if payment is confirmed, change internal booking database */
         if(dummy_resp){
+            rh.updateInvoice("http://localhost:8060/invoice/",booking_id);
             status = 1;
-        } else {
-            status = 0;
         }
         return status;
     }
