@@ -15,6 +15,7 @@ func main() {
 	router := httprouter.New()
 
 	router.POST("/customer", hotelbooking.RegisterProfile)
+	router.GET("/customer", hotelbooking.GetIDByProfile)
 	router.PUT("/customer/:id", hotelbooking.UpdateProfile)
 
 	router.POST("/employee", hotelbooking.AddEmployee)

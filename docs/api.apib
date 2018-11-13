@@ -110,6 +110,48 @@ Update customer profile.
                 "message" : "Invalid ID"
             }
 
+## Customer ID by Profile [/customer{?name,id,email}]
+
++ Parameters
+    + name (string, required) - Customer name
+    + id (string, required) - Customer ID or passport
+    + email (string, required) - Customer email
+
+### Get ID by Profile [GET]
+
+Get customer ID by profile.
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + id (number, optional) - Profile ID
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK",
+                "data" :
+                {
+                    "id" : 1
+                }
+            }
+
++ Response 400 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + id (number, optional) - Profile ID
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Missing required parameters or invalid data",
+                "data" : null
+            }
+
 ## Invoice [/invoice]
 
 ### Create Invoice [POST]
@@ -676,6 +718,37 @@ Get details of all available room between check in date and check out date.
                         "price" : 600000
                     }
                 ]
+            }
+
++ Response 400 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (array, required) - Array of room data
+            + (object, optional) - Room data
+                + id (number, required) - Room ID
+                + room_type (enum[string], required) - Room type
+                    + Members
+                        + "Single"
+                        + "Double"
+                        + "Family"
+                + description (string, required) - Room description
+                + tv (boolean, required) - Room facility
+                + ac (boolean, required) - Room facility
+                + internet (boolean, required) - Room facility
+                + hot_water (boolean, required) - Room facility
+                + refrigerator (boolean, required) - Room facility
+                + safe_deposit_box (boolean, required) - Room facility
+                + wardrobe (boolean, required) - Room facility
+                + window (boolean, required) - Room facility
+                + balcony (boolean, required) - Room facility
+                + price (number, required) - Room price (IDR)
+    + Body
+    
+            {
+                "success" : false,
+                "message" : "Missing required parameters or invalid data",
+                "data" : null
             }
 
 ## Room by ID [/room/{id}]

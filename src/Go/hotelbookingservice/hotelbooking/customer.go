@@ -22,6 +22,10 @@ type RegisterProfileResponseData struct {
 	ID int `json:"id"`
 }
 
+type GetIDByProfileResponseData struct {
+	ID int `json:"id"`
+}
+
 /* API */
 
 func RegisterProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -69,6 +73,38 @@ func RegisterProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 
 	data := RegisterProfileResponseData{
 		ID: int(id),
+	}
+
+	SendOKWithData(w, data)
+}
+
+func GetIDByProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	name := r.URL.Query().Get("name")
+	identity := r.URL.Query().Get("id")
+	email := r.URL.Query().Get("email")
+
+	if name == "" || identity == "" || email == "" {
+		SendBadRequestWithData(w)
+		return
+	}
+
+	statement, err := db.Prepare("SELECT id FROM customer WHERE name = ? AND identity = ? AND email = ?")
+
+	if err != nil {
+		log.Println("GetIDByProfile :", err)
+		return
+	}
+
+	defer statement.Close()
+
+	var data GetIDByProfileResponseData
+	err = statement.QueryRow(name, identity, email).Scan(&data.ID)
+
+	if err != nil {
+		log.Println("GetIDByProfile :", err)
+
+		SendOKWithData(w, nil)
+		return
 	}
 
 	SendOKWithData(w, data)
