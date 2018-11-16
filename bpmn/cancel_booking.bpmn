@@ -7,22 +7,22 @@
     <bpmn:startEvent id="StartEvent_1" name="Start" camunda:formKey="cancel-booking">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="invoice-id" label="ID Invoice yang akan dicancel" type="enum" />
+          <camunda:formField id="invoice_id" label="ID Invoice yang akan dicancel" type="enum" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:outgoing>SequenceFlow_0qewu5x</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:serviceTask id="cac" name="Cancel Booking" camunda:type="external" camunda:topic="cancel-booking">
+    <bpmn:serviceTask id="cancel" name="Cancel Booking" camunda:type="external" camunda:topic="cancel-booking">
       <bpmn:incoming>SequenceFlow_0qewu5x</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0wgfssd</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_0qewu5x" sourceRef="StartEvent_1" targetRef="cac" />
+    <bpmn:sequenceFlow id="SequenceFlow_0qewu5x" sourceRef="StartEvent_1" targetRef="cancel" />
     <bpmn:exclusiveGateway id="ExclusiveGateway_1782amt">
       <bpmn:incoming>SequenceFlow_0wgfssd</bpmn:incoming>
       <bpmn:outgoing>not-paid</bpmn:outgoing>
       <bpmn:outgoing>paid</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_0wgfssd" sourceRef="cac" targetRef="ExclusiveGateway_1782amt" />
+    <bpmn:sequenceFlow id="SequenceFlow_0wgfssd" sourceRef="cancel" targetRef="ExclusiveGateway_1782amt" />
     <bpmn:userTask id="refund" name="Refund">
       <bpmn:incoming>paid</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0rhgsi3</bpmn:outgoing>
@@ -47,18 +47,18 @@
           <dc:Bounds x="179" y="145" width="24" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_11j4ddn_di" bpmnElement="cac">
-        <dc:Bounds x="263" y="80" width="100" height="80" />
+      <bpmndi:BPMNShape id="ServiceTask_11j4ddn_di" bpmnElement="cancel">
+        <dc:Bounds x="262" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0qewu5x_di" bpmnElement="SequenceFlow_0qewu5x">
         <di:waypoint x="209" y="120" />
-        <di:waypoint x="263" y="120" />
+        <di:waypoint x="262" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ExclusiveGateway_1782amt_di" bpmnElement="ExclusiveGateway_1782amt" isMarkerVisible="true">
         <dc:Bounds x="451" y="95" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0wgfssd_di" bpmnElement="SequenceFlow_0wgfssd">
-        <di:waypoint x="363" y="120" />
+        <di:waypoint x="362" y="120" />
         <di:waypoint x="451" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_1oq66wj_di" bpmnElement="refund">
