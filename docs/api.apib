@@ -751,6 +751,43 @@ Get details of all available room between check in date and check out date.
                 "data" : null
             }
 
+## Room by Date and Type [/room{?in,out,type}]
+
++ Parameters
+    + in (string, required) - Check in date (DD-MM-YYYY)
+    + out (string, required) - Check out date (DD-MM-YYYY)
+    + type (string, required) - Room type
+
+### Get Available Room IDs [GET]
+
+Get all available room IDs between check in date and check out date with specified type.
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (array[number], required) - Array of room IDs
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK",
+                "data" : [ 1, 4, 10 ] 
+            }
+
++ Response 400 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (array[number], required) - Array of room IDs
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Missing required parameters or invalid data",
+                "data" : null
+            }
+
 ## Room by ID [/room/{id}]
 
 + Parameters

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0olcrnu" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.0.3">
+  <bpmn:process id="cancel-booking" isExecutable="true">
+    <bpmn:extensionElements>
+      <camunda:executionListener class="" event="start" />
+    </bpmn:extensionElements>
+    <bpmn:startEvent id="StartEvent_1" name="Start" camunda:formKey="cancel-booking">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="invoice-id" label="ID Invoice yang akan dicancel" type="enum" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_0qewu5x</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="cac" name="Cancel Booking" camunda:type="external" camunda:topic="cancel-booking">
+      <bpmn:incoming>SequenceFlow_0qewu5x</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0wgfssd</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0qewu5x" sourceRef="StartEvent_1" targetRef="cac" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1782amt">
+      <bpmn:incoming>SequenceFlow_0wgfssd</bpmn:incoming>
+      <bpmn:outgoing>not-paid</bpmn:outgoing>
+      <bpmn:outgoing>paid</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_0wgfssd" sourceRef="cac" targetRef="ExclusiveGateway_1782amt" />
+    <bpmn:userTask id="refund" name="Refund">
+      <bpmn:incoming>paid</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0rhgsi3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_07rdrw6">
+      <bpmn:incoming>not-paid</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0rhgsi3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="not-paid" name="not paid" sourceRef="ExclusiveGateway_1782amt" targetRef="EndEvent_07rdrw6">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">$(!paid)</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="paid" name="paid" sourceRef="ExclusiveGateway_1782amt" targetRef="refund">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">$(paid)</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0rhgsi3" sourceRef="refund" targetRef="EndEvent_07rdrw6" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="cancel-booking">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="173" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="179" y="145" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_11j4ddn_di" bpmnElement="cac">
+        <dc:Bounds x="263" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0qewu5x_di" bpmnElement="SequenceFlow_0qewu5x">
+        <di:waypoint x="209" y="120" />
+        <di:waypoint x="263" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ExclusiveGateway_1782amt_di" bpmnElement="ExclusiveGateway_1782amt" isMarkerVisible="true">
+        <dc:Bounds x="451" y="95" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0wgfssd_di" bpmnElement="SequenceFlow_0wgfssd">
+        <di:waypoint x="363" y="120" />
+        <di:waypoint x="451" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1oq66wj_di" bpmnElement="refund">
+        <dc:Bounds x="426" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_07rdrw6_di" bpmnElement="EndEvent_07rdrw6">
+        <dc:Bounds x="791" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0bm6lhv_di" bpmnElement="not-paid">
+        <di:waypoint x="501" y="120" />
+        <di:waypoint x="791" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="626" y="102" width="40" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0csskq0_di" bpmnElement="paid">
+        <di:waypoint x="476" y="145" />
+        <di:waypoint x="476" y="210" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="481" y="175" width="21" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0rhgsi3_di" bpmnElement="SequenceFlow_0rhgsi3">
+        <di:waypoint x="526" y="250" />
+        <di:waypoint x="809" y="250" />
+        <di:waypoint x="809" y="138" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
