@@ -75,18 +75,28 @@ client.subscribe('cancel-booking', async function({ task, taskService }) {
 });
 
 client.subscribe('send-payment-information', async function({ task, taskService }) {
+    const processVariables = new Variables();
+
+    try {
+        //Calls Payment Gateway Service
+    } catch(error) {
+        console.log(error);
+    }
+    await taskService.complete(task, processVariables);
+});
+
+client.subscribe('update-invoice', async function({ task, taskService }) {
     const invoiceId = task.variables.get('invoice_id');
     const processVariables = new Variables();
 
     try {
-        let response = await axios.get(BASE_URL+'invoice/'+invoiceId);
+        let response = await axios.put(BASE_URL+'invoice/'+invoiceId);
         invoiceDetails = respose.data;
         if (invoiceDetails.paid) {
             processVariables.set('paid', true);
         } else {
             processVariables.set('paid', false);
         }
-        await axios.delete(BASE_URL+'invoice/'+invoiceId);
     } catch(error) {
         console.log(error);
     }
