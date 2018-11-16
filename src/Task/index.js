@@ -22,7 +22,7 @@ client.subscribe('search-room', async function({ task, taskService }) {
   try {
     let response = await axios.get(BASE_URL+'room/?in='+checkIn+'&out='+checkOut+'&type='+roomType+'/');
     availableRooms = respose.data;
-    if (availableRooms.length != 0) {
+    if (availableRooms.length !== 0) {
         processVariables.set('found', true);
     } else {
         processVariables.set('found', false);
@@ -44,13 +44,33 @@ client.subscribe('create-invoice', async function({ task, taskService }) {
     let response = await axios.get(BASE_URL+'room/?in='+checkIn+'&out='+checkOut+'&type='+roomType+'/');
     room = response.data[0];
     let result = await axios.post(BASE_URL+'invoice/', {
-      room_id = room,
-      customer_id = customerId,
-      in = checkIn,
-      out = checkOut
+      room_id : room,
+      customer_id : customerId,
+      in : checkIn,
+      out : checkOut
     });
   } catch (error) {
     console.log(error);
   }
 
 });
+
+client.subscribe('cancel-booking', async function({ task, taskService }) {
+    const invoiceId = task.variables.get('invoice_id');
+    const processVariables = new Variables();
+
+    try {
+        let response = await axios.get(BASE_URL+'invoice/'+invoiceId);
+        invoiceDetails = respose.data;
+        if (invoiceDetails.paid) {
+            processVariables.set('paid', true);
+        } else {
+            processVariables.set('paid', false);
+        }
+        await axios.delete(BASE_URL+'invoice/'+invoiceId);
+    } catch(error) {
+        console.log(error);
+    }
+    await taskService.complete(task, processVariables);
+});
+
