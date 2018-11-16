@@ -1,0 +1,56 @@
+const axios = require('axios');
+const http = require('http');
+
+const { Client, logger, Variables } = require('camunda-external-task-client-js');
+
+// configuration for the Client:
+//  - 'baseUrl': url to the Process Engine
+//  - 'logger': utility to automatically log important events
+const config = { baseUrl: 'http://localhost:8080/engine-rest', use: logger };
+
+// create a Client instance with custom configuration
+const client = new Client(config);
+
+const BASE_URL = "http://localhost:8060/"
+
+client.subscribe('search-room', async function({ task, taskService }) {
+  const roomType = task.variable.get('room_type');
+  const checkIn = task.variable.get('check_in');
+  const checkOut = task.variable.get ('check_out');
+  const processVariables = new Variables();
+
+  try {
+    let response = await axios.get(BASE_URL+'room/?in='+checkIn+'&out='+checkOut+'&type='+roomType+'/');
+    availableRooms = respose.data;
+    if (availableRooms.length != 0) {
+        processVariables.set('found', true);
+    } else {
+        processVariables.set('found', false);
+    }
+  } catch(error) {
+    console.log(error);
+  }
+  await taskService.complete(task, processVariables);
+});
+
+client.subscribe('create-invoice', async function({ task, taskService }) {
+  const roomType = task.variable.get('room_type');
+  const customerId = task.variables.get('customer_id');
+  const checkIn = task.variables.get('check_in');
+  const checkOut = task.variables.get('check_out');
+  const processVariables = new Variables();
+
+  try {
+    let response = await axios.get(BASE_URL+'room/?in='+checkIn+'&out='+checkOut+'&type='+roomType+'/');
+    room = response.data[0];
+    let result = await axios.post(BASE_URL+'invoice/', {
+      room_id = room,
+      customer_id = customerId,
+      in = checkIn,
+      out = checkOut
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+});
