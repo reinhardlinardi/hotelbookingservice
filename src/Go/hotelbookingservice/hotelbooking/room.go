@@ -121,7 +121,17 @@ func CreateRoom(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	SendOKWithData(w, data)
 }
 
-func GetAvailableRooms(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func GetAvailableRoomsData(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	re, _ := regexp.Compile("type=")
+
+	if re.MatchString(r.URL.String()) {
+		GetAvailableRoomIDs(w, r, ps)
+	} else {
+		GetAvailableRoomDetails(w, r, ps)
+	}
+}
+
+func GetAvailableRoomDetails(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	checkInStr := r.URL.Query().Get("in")
 	checkOutStr := r.URL.Query().Get("out")
 
@@ -220,42 +230,156 @@ func GetAvailableRooms(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	SendOKWithData(w, result)
 }
 
-func GetRoomInfo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func GetAvailableRoomIDs(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	checkInStr := r.URL.Query().Get("in")
+	checkOutStr := r.URL.Query().Get("out")
+	roomType := strings.ToLower(r.URL.Query().Get("type"))
+
+	checkIn, err := time.Parse("02-01-2006", checkInStr)
+
+	if err != nil {
+		SendBadRequestWithData(w)
+		return
+	}
+
+	checkOut, err := time.Parse("02-01-2006", checkOutStr)
+
+	if err != nil {
+		SendBadRequestWithData(w)
+		return
+	}
+
+	if !checkIn.Before(checkOut) {
+		SendBadRequestWithData(w)
+		return
+	}
+
+	if !isRoomTypeValid(roomType) {
+		SendBadRequestWithData(w)
+		return
+	}
+
+	statement, err := db.Prepare("SELECT id FROM room")
+
+	if err != nil {
+		log.Println("GetAvailableRoomIDs :", err)
+		return
+	}
+
+	defer statement.Close()
+
+	var availability GetRoomAvailabilityResponse
+	var result []int
+	rows, _ := statement.Query()
+
+	for rows.Next() {
+		var id int
+		err = rows.Scan(&id)
+
+		if err != nil {
+			log.Println("GetAvailableRoomIDs :", err)
+			return
+		}
+
+		url := fmt.Sprintf("http://localhost:8060/room/%d?in=%s&out=%s", id, checkInStr, checkOutStr)
+		res, err := http.Get(url)
+
+		if err != nil {
+			log.Println("GetAvailableRoomIDs :", err)
+			return
+		}
+
+		body, err := ioutil.ReadAll(res.Body)
+
+		if err != nil {
+			log.Println("GetAvailableRoomIDs :", err)
+			return
+		}
+
+		err = json.Unmarshal(body, &availability)
+
+		if err != nil {
+			log.Println("GetAvailableRoomIDs :", err)
+			return
+		}
+
+		if availability.Data.Available {
+			url = fmt.Sprintf("http://localhost:8060/room/%d", id)
+			res, err = http.Get(url)
+
+			if err != nil {
+				log.Println("GetAvailableRoomIDs :", err)
+				return
+			}
+
+			body, err = ioutil.ReadAll(res.Body)
+
+			if err != nil {
+				log.Println("GetAvailableRoomIDs :", err)
+				return
+			}
+
+			var roomInfo GetRoomInfoResponse
+			err = json.Unmarshal(body, &roomInfo)
+
+			if err != nil {
+				log.Println("GetAvailableRoomIDs :", err)
+				return
+			}
+
+			if roomType == strings.ToLower(*roomInfo.Data.RoomType) {
+				result = append(result, id)
+			}
+		}
+	}
+
+	if result == nil {
+		result = make([]int, 0)
+	}
+
+	SendOKWithData(w, result)
+}
+
+func GetRoomData(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	re, _ := regexp.Compile("\\?.*$")
 
 	if re.MatchString(r.URL.String()) {
 		GetRoomAvailability(w, r, ps)
 	} else {
-		id, err := strconv.Atoi(ps.ByName("id"))
-
-		if err != nil {
-			log.Println("GetRoomInfo :", err)
-
-			SendNotFoundWithData(w)
-			return
-		}
-
-		statement, err := db.Prepare("SELECT type, description, tv, ac, internet, water, refrigerator, deposit_box, wardrobe, window, balcony, price FROM room WHERE id = ?")
-
-		if err != nil {
-			log.Println("GetRoomInfo :", err)
-			return
-		}
-
-		defer statement.Close()
-
-		var room Room
-		err = statement.QueryRow(id).Scan(&room.RoomType, &room.Description, &room.TV, &room.AC, &room.Internet, &room.HotWater, &room.Refrigerator, &room.SafeDepositBox, &room.Wardrobe, &room.Window, &room.Balcony, &room.Price)
-
-		if err != nil {
-			log.Println("GetRoomInfo :", err)
-
-			SendNotFoundWithData(w)
-			return
-		}
-
-		SendOKWithData(w, room)
+		GetRoomInfo(w, r, ps)
 	}
+}
+
+func GetRoomInfo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id, err := strconv.Atoi(ps.ByName("id"))
+
+	if err != nil {
+		log.Println("GetRoomInfo :", err)
+
+		SendNotFoundWithData(w)
+		return
+	}
+
+	statement, err := db.Prepare("SELECT type, description, tv, ac, internet, water, refrigerator, deposit_box, wardrobe, window, balcony, price FROM room WHERE id = ?")
+
+	if err != nil {
+		log.Println("GetRoomInfo :", err)
+		return
+	}
+
+	defer statement.Close()
+
+	var room Room
+	err = statement.QueryRow(id).Scan(&room.RoomType, &room.Description, &room.TV, &room.AC, &room.Internet, &room.HotWater, &room.Refrigerator, &room.SafeDepositBox, &room.Wardrobe, &room.Window, &room.Balcony, &room.Price)
+
+	if err != nil {
+		log.Println("GetRoomInfo :", err)
+
+		SendNotFoundWithData(w)
+		return
+	}
+
+	SendOKWithData(w, room)
 }
 
 func DeleteRoom(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
