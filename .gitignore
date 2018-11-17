@@ -1,7 +1,7 @@
 src/Java/HotelBooking/.idea/
 src/Java/HotelBooking/out/
-src/Go/hotelbookingservice/hotelbookingservice
-src/Go/hotelbookingservice/hotelbookingservice.exe
-src/Go/hotelbookingservice/config/dbconfig.json
+src/Go/hotelbooking/hotelbooking
+src/Go/hotelbooking/hotelbooking.exe
+src/Go/hotelbooking/config/config.json
 src/Node/npm-debug.log
 src/Node/node_modules/
