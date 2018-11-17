@@ -1,0 +1,7 @@
+{
+    "mysql" : {
+        "user" : "root",
+        "pass" : "root",
+        "db" : "hotel_booking"
+    }
+}
