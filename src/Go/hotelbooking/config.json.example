@@ -1,8 +1,4 @@
 {
-    "http" : {
-        "url" : "/",
-        "port" : 8060
-    },
     "mysql" : {
         "user" : "user",
         "pass" : "pass",
