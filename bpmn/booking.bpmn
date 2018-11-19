@@ -17,7 +17,7 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1rbru7n" sourceRef="search-room" targetRef="ExclusiveGateway_01va4k1" />
     <bpmn:sequenceFlow id="SequenceFlow_1tukdis" sourceRef="start-booking" targetRef="search-room" />
-    <bpmn:exclusiveGateway id="ExclusiveGateway_01va4k1">
+    <bpmn:exclusiveGateway id="ExclusiveGateway_01va4k1" name="Are there available rooms?">
       <bpmn:incoming>SequenceFlow_1rbru7n</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0xa6sa1</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_05joy42</bpmn:outgoing>
@@ -28,22 +28,29 @@
     <bpmn:sequenceFlow id="SequenceFlow_0xa6sa1" name="not found" sourceRef="ExclusiveGateway_01va4k1" targetRef="EndEvent_0fdwfk8">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">$(!found)</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sendTask id="validate-payment" name="Validate Payment" camunda:type="external" camunda:topic="validate-payment">
-      <bpmn:incoming>SequenceFlow_1jglhbc</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_134ewy2</bpmn:outgoing>
-    </bpmn:sendTask>
     <bpmn:sequenceFlow id="SequenceFlow_05joy42" name="found" sourceRef="ExclusiveGateway_01va4k1" targetRef="create-invoice">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">$(found)</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_134ewy2" sourceRef="validate-payment" targetRef="EndEvent_1g5q5av" />
-    <bpmn:serviceTask id="create-invoice" name="Create Invoice" camunda:type="external" camunda:topic="create-invoice">
-      <bpmn:incoming>SequenceFlow_05joy42</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1jglhbc</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_1jglhbc" sourceRef="create-invoice" targetRef="validate-payment" />
+    <bpmn:callActivity id="validate-payment" name="Validate Payment" calledElement="validate_payment">
+      <bpmn:extensionElements>
+        <camunda:in source="booking_id" target="booking_id" />
+        <camunda:in source="price" target="price" />
+        <camunda:in source="payer_name" target="payer_name" />
+        <camunda:in source="payment_type" target="payment_type" />
+        <camunda:out source="status" target="status" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1jglhbc</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_134ewy2</bpmn:outgoing>
+    </bpmn:callActivity>
     <bpmn:serviceTask id="search-room" name="Search Room" camunda:type="external" camunda:topic="search-room">
       <bpmn:incoming>SequenceFlow_1tukdis</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1rbru7n</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="create-invoice" name="Create Invoice" camunda:type="external" camunda:topic="create-invoice">
+      <bpmn:incoming>SequenceFlow_05joy42</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1jglhbc</bpmn:outgoing>
     </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -67,6 +74,9 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ExclusiveGateway_01va4k1_di" bpmnElement="ExclusiveGateway_01va4k1" isMarkerVisible="true">
         <dc:Bounds x="418" y="95" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="402" y="65" width="84" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="EndEvent_0fdwfk8_di" bpmnElement="EndEvent_0fdwfk8">
         <dc:Bounds x="425" y="272" width="36" height="36" />
@@ -78,9 +88,6 @@
           <dc:Bounds x="388" y="204" width="46" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="SendTask_0uet4gp_di" bpmnElement="validate-payment">
-        <dc:Bounds x="686" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_05joy42_di" bpmnElement="SequenceFlow_05joy42">
         <di:waypoint x="468" y="120" />
         <di:waypoint x="556" y="120" />
@@ -92,15 +99,18 @@
         <di:waypoint x="786" y="120" />
         <di:waypoint x="843" y="120" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_010xbap_di" bpmnElement="create-invoice">
-        <dc:Bounds x="556" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1jglhbc_di" bpmnElement="SequenceFlow_1jglhbc">
         <di:waypoint x="656" y="120" />
         <di:waypoint x="686" y="120" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_1252ejr_di" bpmnElement="search-room">
+      <bpmndi:BPMNShape id="CallActivity_0bbkdqw_di" bpmnElement="validate-payment">
+        <dc:Bounds x="686" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_166114d_di" bpmnElement="search-room">
         <dc:Bounds x="264" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1yz55bw_di" bpmnElement="create-invoice">
+        <dc:Bounds x="556" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
