@@ -1,8 +1,9 @@
-package hotelbooking
+package hotel
 
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 
@@ -16,29 +17,31 @@ var (
 
 /* Types */
 
-type DBConfig struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Database string `json:"database"`
+type Config struct {
+	MySQL struct {
+		User string `json:"user"`
+		Pass string `json:"pass"`
+		DB   string `json:"db"`
+	} `json:"mysql"`
 }
 
 /* Functions */
 
-func ConnectDB() {
-	data, err := ioutil.ReadFile("config/dbconfig.json")
+func Init() {
+	data, err := ioutil.ReadFile("config.json")
 
 	if err != nil {
 		log.Fatal("ConnectDB : ", err)
 	}
 
-	var config DBConfig
+	var config Config
 	err = json.Unmarshal(data, &config)
 
 	if err != nil {
 		log.Fatal("ConnectDB : ", err)
 	}
 
-	connStr := config.Username + ":" + config.Password + "@/" + config.Database
+	connStr := fmt.Sprintf("%s:%s@/%s", config.MySQL.User, config.MySQL.Pass, config.MySQL.DB)
 	conn, err := sql.Open("mysql", connStr)
 
 	if err != nil {
@@ -48,6 +51,6 @@ func ConnectDB() {
 	db = conn
 }
 
-func DisconnectDB() {
+func CleanUp() {
 	db.Close()
 }
