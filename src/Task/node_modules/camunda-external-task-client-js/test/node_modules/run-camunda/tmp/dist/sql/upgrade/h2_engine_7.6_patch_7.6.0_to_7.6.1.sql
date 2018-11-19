@@ -1,2 +1,0 @@
-ALTER TABLE ACT_RU_EVENT_SUBSCR
-  alter column ACTIVITY_ID_ varchar(255);

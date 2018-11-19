@@ -21,7 +21,7 @@ client.subscribe('search-room', async function({ task, taskService }) {
 
   try {
     let response = await axios.get(BASE_URL+'room/?in='+checkIn+'&out='+checkOut+'&type='+roomType+'/');
-    availableRooms = respose.data;
+    availableRooms = response.data;
     if (availableRooms.length !== 0) {
         processVariables.set('found', true);
     } else {
@@ -60,14 +60,29 @@ client.subscribe('cancel-booking', async function({ task, taskService }) {
     const processVariables = new Variables();
 
     try {
-        let response = await axios.get(BASE_URL+'invoice/'+invoiceId);
-        invoiceDetails = respose.data;
-        if (invoiceDetails.paid) {
-            processVariables.set('paid', true);
+        let response = await axios.delete(BASE_URL+'invoice/'+invoiceId);
+        bookingDetails = response.data;
+        console.log(typeof response.data);
+        if (bookingDetails.length !== 0) {
+            //Sets Payment status
+            if(bookingDetails.paid === true){
+                processVariables.set('paid',true);
+            } else {
+                processVariables.set('paid',false);
+            }
+
+            //Calls cancel API
+            cancelResponse = await axios.delete(BASE_URL+'invoice/'+invoiceId);
+            console.log(typeof cancelResponse.data);
+            if(cancelResponse.data.success === true){
+                processVariables.set('cancelled', true);
+            } else {
+                console.log(cancelResponse.data.message);
+                processVariables.set('cancelled',false);
+            }
         } else {
-            processVariables.set('paid', false);
+            processVariables.set('cancelled', false);
         }
-        await axios.delete(BASE_URL+'invoice/'+invoiceId);
     } catch(error) {
         console.log(error);
     }

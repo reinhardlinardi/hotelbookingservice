@@ -45,9 +45,9 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approved}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:endEvent id="EndEvent_140iwon" name="Payment Confirmed">
-      <bpmn:incoming>SequenceFlow_1wxlz88</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1rn6zau</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1wxlz88" sourceRef="update-invoice" targetRef="EndEvent_140iwon" />
+    <bpmn:sequenceFlow id="SequenceFlow_1wxlz88" sourceRef="update-invoice" targetRef="Task_1aewq48" />
     <bpmn:serviceTask id="update-invoice" name="Update Invoice" camunda:type="external" camunda:topic="update-invoice">
       <bpmn:incoming>SequenceFlow_0egyiuq</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1wxlz88</bpmn:outgoing>
@@ -60,6 +60,11 @@
       <bpmn:incoming>SequenceFlow_0xen893</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1ow1bwl</bpmn:outgoing>
     </bpmn:callActivity>
+    <bpmn:sequenceFlow id="SequenceFlow_1rn6zau" sourceRef="Task_1aewq48" targetRef="EndEvent_140iwon" />
+    <bpmn:sendTask id="Task_1aewq48" name="sendResult">
+      <bpmn:incoming>SequenceFlow_1wxlz88</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1rn6zau</bpmn:outgoing>
+    </bpmn:sendTask>
   </bpmn:process>
   <bpmn:message id="Message_0bumhe4" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -129,20 +134,27 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_140iwon_di" bpmnElement="EndEvent_140iwon">
-        <dc:Bounds x="896" y="102" width="36" height="36" />
+        <dc:Bounds x="1074" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="889" y="145" width="51" height="27" />
+          <dc:Bounds x="1067" y="145" width="51" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1wxlz88_di" bpmnElement="SequenceFlow_1wxlz88">
         <di:waypoint x="827" y="120" />
-        <di:waypoint x="896" y="120" />
+        <di:waypoint x="891" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_1upuqod_di" bpmnElement="update-invoice">
         <dc:Bounds x="727" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="CallActivity_02zgsxm_di" bpmnElement="Task_0lnsc7f">
         <dc:Bounds x="513" y="5" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1rn6zau_di" bpmnElement="SequenceFlow_1rn6zau">
+        <di:waypoint x="991" y="120" />
+        <di:waypoint x="1074" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="SendTask_0hai9aj_di" bpmnElement="Task_1aewq48">
+        <dc:Bounds x="891" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0olcrnu" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.0.3">
-  <bpmn:process id="cancel-booking" isExecutable="true">
-    <bpmn:extensionElements>
-      <camunda:executionListener class="" event="start" />
-    </bpmn:extensionElements>
+  <bpmn:process id="cancel-booking" name="cancel-booking" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1" name="Start" camunda:formKey="cancel-booking">
       <bpmn:extensionElements>
         <camunda:formData>
@@ -32,10 +29,10 @@
       <bpmn:incoming>SequenceFlow_0rhgsi3</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="not-paid" name="not paid" sourceRef="ExclusiveGateway_1782amt" targetRef="EndEvent_07rdrw6">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">$(!paid)</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${paid.equals(false)}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="paid" name="paid" sourceRef="ExclusiveGateway_1782amt" targetRef="refund">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">$(paid)</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${paid.equals(true)}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0rhgsi3" sourceRef="refund" targetRef="EndEvent_07rdrw6" />
   </bpmn:process>
