@@ -1,4 +1,4 @@
-const axios = require('axios');
+const axios = require('axios').create();
 const http = require('http');
 
 const { Client, logger, Variables } = require('camunda-external-task-client-js');
@@ -24,7 +24,15 @@ client.subscribe('search-room', async function({ task, taskService }) {
   const processVariables = new Variables();
 
   try {
-    let response = await axios.get(BASE_URL+'room/?in='+checkIn+'&out='+checkOut+'&type='+roomType);
+    let response = await axios.get(BASE_URL+'room', {
+        params: {
+          in: checkIn,
+          out: checkOut,
+          type:roomType
+        }
+    }).then(function(error){
+        console.log(error);
+    });
     availableRooms = response.data;
     console.log(response.data);
     if (availableRooms.length !== 0) {
@@ -46,7 +54,15 @@ client.subscribe('create-invoice', async function({ task, taskService }) {
   const processVariables = new Variables();
 
   try {
-    let response = await axios.get(BASE_URL+'room/?in='+checkIn+'&out='+checkOut+'&type='+roomType+'/');
+    let response = await axios.get(BASE_URL+'room', {
+        params: {
+          in: checkIn,
+          out: checkOut,
+          type:roomType
+        }
+    }).then(function(error){
+        console.log(error);
+    });
     room = response.data[0];
     let result = await axios.post(BASE_URL+'invoice/', {
       room_id : room,

@@ -26,10 +26,10 @@
       <bpmn:incoming>SequenceFlow_0xa6sa1</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0xa6sa1" name="not found" sourceRef="ExclusiveGateway_01va4k1" targetRef="EndEvent_0fdwfk8">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">$(!found)</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!found}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_05joy42" name="found" sourceRef="ExclusiveGateway_01va4k1" targetRef="create-invoice">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">$(found)</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${found}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_134ewy2" sourceRef="validate-payment" targetRef="EndEvent_1g5q5av" />
     <bpmn:sequenceFlow id="SequenceFlow_1jglhbc" sourceRef="create-invoice" targetRef="validate-payment" />
