@@ -59,6 +59,48 @@ client.subscribe('create-invoice', async function({ task, taskService }) {
 
 });
 
+client.subscribe('validate-payment', async function({ task, taskService }) {
+    const booking_id = task.variables.get('booking_id');
+    const price = task.variables.get('price');
+    const payer_name = task.variables.get('payer_name');
+    const payment_type = task.variables.get('payment_type');
+    const processVariables = new Variables();
+
+    try {
+        let response = await axios.post(paymentGateway.url,{
+            "variables":{
+                "booking_id":{
+                    "value" : ,
+                    "type" : "integer"
+                },
+                "price":{
+                    "value" : 200000,
+                    "type" : "integer"
+                },
+                "payer_name":{
+                    "value" : "reinhard",
+                    "type" : "string"
+                },
+                "payment-type":{
+                    "value" : "credit",
+                    "type" : "string"
+                }
+            },
+            "withVariablesInReturn": true
+        });
+
+        if(response.data.length > 0){
+            processVariables.set('approved',true);
+        } else {
+            processVariables.set('approved',false);
+        }
+        //Calls Payment Gateway Service
+    } catch(error) {
+        console.log(error);
+    }
+    await taskService.complete(task, processVariables);
+});
+
 client.subscribe('cancel-booking', async function({ task, taskService }) {
     const invoiceId = task.variables.get('invoice_id');
     const processVariables = new Variables();
@@ -99,9 +141,29 @@ client.subscribe('request-payment-information', async function({ task, taskServi
     const processVariables = new Variables();
 
     try {
-        // let response = await axios.post(paymentGateway.url,{
+        let response = await axios.post(paymentGateway.url,{
+            "variables":{
+                "price" : {
+                    "value" : price,
+                    "type": "long"
+                },
+                "name" : {
+                    "value":  payer_name,
+                    "type" :  "string"
+                },
+                "type" : {
+                    "value":  payment_type,
+                    "type" :  "string"
+                }
+            },
+            "withVariablesInReturn": true
+        });
 
-        // });
+        if(response.data.length > 0){
+            processVariables.set('approved',true);
+        } else {
+            processVariables.set('approved',false);
+        }
         //Calls Payment Gateway Service
     } catch(error) {
         console.log(error);
@@ -116,10 +178,11 @@ client.subscribe('update-invoice', async function({ task, taskService }) {
     try {
         let response = await axios.put(BASE_URL+'invoice/'+invoiceId);
         invoiceDetails = respose.data;
-        if (invoiceDetails.paid) {
-            processVariables.set('paid', true);
+        if (invoiceDetails.success) {
+            processVariables.set('invoice-updated', true);
         } else {
-            processVariables.set('paid', false);
+            console.log(invoiceDetails.message);
+            processVariables.set('invoice-updated', false);
         }
     } catch(error) {
         console.log(error);

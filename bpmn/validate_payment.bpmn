@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1glp6jg" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.0.3">
-  <bpmn:process id="Process_1" isExecutable="true">
+  <bpmn:process id="validate-payment" name="validate-payment" isExecutable="true">
     <bpmn:startEvent id="start-validate" name="Start" camunda:formKey="validate-payment">
       <bpmn:extensionElements>
         <camunda:formData>
@@ -18,7 +18,7 @@
       <bpmn:incoming>SequenceFlow_1kac4py</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0ef3phh</bpmn:outgoing>
       <bpmn:timerEventDefinition>
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P1H</bpmn:timeDuration>
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT1M</bpmn:timeDuration>
       </bpmn:timerEventDefinition>
     </bpmn:intermediateCatchEvent>
     <bpmn:exclusiveGateway id="confirmation-check" name="Received confirmation within time limit?">
@@ -52,7 +52,7 @@
       <bpmn:incoming>SequenceFlow_0egyiuq</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1wxlz88</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:callActivity id="request-payment-information" name="Request Payment Confirmation" calledElement="payment-gateway">
+    <bpmn:callActivity id="request-payment-information" name="Request Payment Confirmation" calledElement="dummy-validation">
       <bpmn:extensionElements>
         <camunda:in source="payment_id" target="payment_id" />
         <camunda:out source="status" target="status" />
@@ -63,7 +63,7 @@
   </bpmn:process>
   <bpmn:message id="Message_0bumhe4" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="validate-payment">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="start-validate">
         <dc:Bounds x="360" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>

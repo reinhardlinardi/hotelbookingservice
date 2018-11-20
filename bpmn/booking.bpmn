@@ -33,7 +33,7 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_134ewy2" sourceRef="validate-payment" targetRef="EndEvent_1g5q5av" />
     <bpmn:sequenceFlow id="SequenceFlow_1jglhbc" sourceRef="create-invoice" targetRef="validate-payment" />
-    <bpmn:callActivity id="validate-payment" name="Validate Payment" calledElement="validate_payment">
+    <bpmn:callActivity id="validate-payment" name="Validate Payment" calledElement="validate-payment">
       <bpmn:extensionElements>
         <camunda:in source="booking_id" target="booking_id" />
         <camunda:in source="price" target="price" />
