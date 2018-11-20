@@ -24,8 +24,9 @@ client.subscribe('search-room', async function({ task, taskService }) {
   const processVariables = new Variables();
 
   try {
-    let response = await axios.get(BASE_URL+'room/?in='+checkIn+'&out='+checkOut+'&type='+roomType+'/');
+    let response = await axios.get(BASE_URL+'room/?in='+checkIn+'&out='+checkOut+'&type='+roomType);
     availableRooms = response.data;
+    console.log(response.data);
     if (availableRooms.length !== 0) {
         processVariables.set('found', true);
     } else {
@@ -53,6 +54,17 @@ client.subscribe('create-invoice', async function({ task, taskService }) {
       in : checkIn,
       out : checkOut
     });
+
+    if(result.success){
+        if(result.data.length !== 0){
+            processVariables.set('booking_id',result.data.id);
+            processVariables.set('selected_room_id',room);
+        } else {
+            console.log(result.message);
+        }
+    } else {
+        console.log(result.message);
+    }
   } catch (error) {
     console.log(error);
   }
@@ -61,28 +73,63 @@ client.subscribe('create-invoice', async function({ task, taskService }) {
 
 client.subscribe('validate-payment', async function({ task, taskService }) {
     const booking_id = task.variables.get('booking_id');
-    const price = task.variables.get('price');
-    const payer_name = task.variables.get('payer_name');
-    const payment_type = task.variables.get('payment_type');
+    const room_id = task.variables.get('selected_room_id');
+    const customer_id = task.variables.get('customer_id');
+    var price = 0;//Belum ada
+    var payer_name = '';
+    
+    //TEMP
+    // const payment_type = task.variables.get('payment_type');
+    const payment_type = 'credit';
+    
     const processVariables = new Variables();
+
+    //Get Room Price
+    try{
+        let roomResponse = await axios.get(BASE_URL+'room/'+room_id);
+        if(roomResponse.success){
+            price = roomResponse.data.price;
+        } else {
+            console.log(roomResponse.message);
+        }
+    } catch(error){
+        console.log(error);
+    }
+
+    //Get Payer Name
+    try{
+        let custResponse = await axios.get(BASE_URL+'customer/'+customer_id);
+
+        if(custResponse.success){
+            if(custResponse.data.length !== 0){
+                payer_name = custResponse.data.Name;
+            } else {
+                console.log('returns 0 data');
+            }
+        } else {
+            console.log(custResponse.message);
+        }
+    } catch(error){
+        console.log(error);
+    }
 
     try {
         let response = await axios.post(paymentGateway.url,{
             "variables":{
                 "booking_id":{
-                    "value" : ,
+                    "value" : booking_id,
                     "type" : "integer"
                 },
                 "price":{
-                    "value" : 200000,
+                    "value" : price,
                     "type" : "integer"
                 },
                 "payer_name":{
-                    "value" : "reinhard",
+                    "value" : payer_name,
                     "type" : "string"
                 },
                 "payment-type":{
-                    "value" : "credit",
+                    "value" : payment_type,
                     "type" : "string"
                 }
             },
