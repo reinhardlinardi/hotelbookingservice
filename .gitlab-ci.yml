@@ -1,0 +1,10 @@
+stages:
+  - build
+
+build:
+  stage: build
+  script:
+    - chmod +x build
+    - ./build
+  only:
+    - master
