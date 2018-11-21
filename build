@@ -13,7 +13,7 @@ printf "\n>> (2/3) Change working directory to '~/hotelbookingservice/src/Go/hot
 cd /home/user/hotelbookingservice/src/Go/hotelbooking
 
 printf "\n>> (3/3) Building REST APIs...\n\n"
-go build
+/usr/local/go/bin/go build
 
 if [[ $? -ne 0 ]]
 then
