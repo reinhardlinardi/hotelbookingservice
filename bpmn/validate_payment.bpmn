@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1glp6jg" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.0.3">
-  <bpmn:process id="validate-payment" name="validate-payment" isExecutable="true">
+  <bpmn:process id="validate-payment-task" name="validate-payment-task" isExecutable="true">
     <bpmn:startEvent id="start-validate" name="Start" camunda:formKey="validate-payment">
       <bpmn:extensionElements>
         <camunda:formData>
@@ -10,40 +10,11 @@
           <camunda:formField id="payment_type" type="string" />
         </camunda:formData>
       </bpmn:extensionElements>
-      <bpmn:outgoing>SequenceFlow_1itje2h</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1oemgeg</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1itje2h" sourceRef="start-validate" targetRef="confirmation-branching" />
-    <bpmn:sequenceFlow id="SequenceFlow_1kac4py" sourceRef="confirmation-branching" targetRef="IntermediateThrowEvent_03kea4h" />
-    <bpmn:intermediateCatchEvent id="IntermediateThrowEvent_03kea4h" name="1 Hour">
-      <bpmn:incoming>SequenceFlow_1kac4py</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0ef3phh</bpmn:outgoing>
-      <bpmn:timerEventDefinition>
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT1M</bpmn:timeDuration>
-      </bpmn:timerEventDefinition>
-    </bpmn:intermediateCatchEvent>
-    <bpmn:exclusiveGateway id="confirmation-check" name="Received confirmation within time limit?">
-      <bpmn:incoming>SequenceFlow_0ef3phh</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_1ow1bwl</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1apqn9e</bpmn:outgoing>
-      <bpmn:outgoing>SequenceFlow_0egyiuq</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_0ef3phh" sourceRef="IntermediateThrowEvent_03kea4h" targetRef="confirmation-check" />
-    <bpmn:sequenceFlow id="SequenceFlow_0xen893" sourceRef="confirmation-branching" targetRef="request-payment-information" />
-    <bpmn:sequenceFlow id="SequenceFlow_1ow1bwl" sourceRef="request-payment-information" targetRef="confirmation-check" />
-    <bpmn:parallelGateway id="confirmation-branching">
-      <bpmn:incoming>SequenceFlow_1itje2h</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1kac4py</bpmn:outgoing>
-      <bpmn:outgoing>SequenceFlow_0xen893</bpmn:outgoing>
-    </bpmn:parallelGateway>
     <bpmn:endEvent id="EndEvent_1xh9tav" name="Cancelled">
       <bpmn:incoming>SequenceFlow_1apqn9e</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1apqn9e" name="Denied" sourceRef="confirmation-check" targetRef="EndEvent_1xh9tav">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!approved}</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_0egyiuq" name="Approved" sourceRef="confirmation-check" targetRef="update-invoice">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approved}</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
     <bpmn:endEvent id="EndEvent_140iwon" name="Payment Confirmed">
       <bpmn:incoming>SequenceFlow_1wxlz88</bpmn:incoming>
     </bpmn:endEvent>
@@ -52,60 +23,32 @@
       <bpmn:incoming>SequenceFlow_0egyiuq</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1wxlz88</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:callActivity id="request-payment-information" name="Request Payment Confirmation" calledElement="dummy-validation">
-      <bpmn:extensionElements>
-        <camunda:in source="payment_id" target="payment_id" />
-        <camunda:out source="status" target="status" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>SequenceFlow_0xen893</bpmn:incoming>
+    <bpmn:exclusiveGateway id="confirmation-check" name="Received confirmation within time limit?">
+      <bpmn:incoming>SequenceFlow_1ow1bwl</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0egyiuq</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1apqn9e</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_0egyiuq" name="Approved" sourceRef="confirmation-check" targetRef="update-invoice">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approved == "true"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1apqn9e" name="Denied" sourceRef="confirmation-check" targetRef="EndEvent_1xh9tav">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approved == "false"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1ow1bwl" sourceRef="request-payment-information" targetRef="confirmation-check" />
+    <bpmn:sequenceFlow id="SequenceFlow_1oemgeg" sourceRef="start-validate" targetRef="request-payment-information" />
+    <bpmn:serviceTask id="request-payment-information" name="Request Payment Confirmation">
+      <bpmn:incoming>SequenceFlow_1oemgeg</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1ow1bwl</bpmn:outgoing>
-    </bpmn:callActivity>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmn:message id="Message_0bumhe4" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="validate-payment">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="validate-payment-task">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="start-validate">
-        <dc:Bounds x="360" y="102" width="36" height="36" />
+        <dc:Bounds x="354" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="366" y="145" width="24" height="14" />
+          <dc:Bounds x="360" y="145" width="24" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_1itje2h_di" bpmnElement="SequenceFlow_1itje2h">
-        <di:waypoint x="396" y="120" />
-        <di:waypoint x="461" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_1kac4py_di" bpmnElement="SequenceFlow_1kac4py">
-        <di:waypoint x="511" y="120" />
-        <di:waypoint x="545" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="IntermediateCatchEvent_1bss470_di" bpmnElement="IntermediateThrowEvent_03kea4h">
-        <dc:Bounds x="545" y="102" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="546" y="145" width="34" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ExclusiveGateway_140bf3a_di" bpmnElement="confirmation-check" isMarkerVisible="true">
-        <dc:Bounds x="615" y="95" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="641" y="144" width="80" height="40" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_0ef3phh_di" bpmnElement="SequenceFlow_0ef3phh">
-        <di:waypoint x="581" y="120" />
-        <di:waypoint x="615" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0xen893_di" bpmnElement="SequenceFlow_0xen893">
-        <di:waypoint x="486" y="95" />
-        <di:waypoint x="486" y="45" />
-        <di:waypoint x="513" y="45" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_1ow1bwl_di" bpmnElement="SequenceFlow_1ow1bwl">
-        <di:waypoint x="613" y="45" />
-        <di:waypoint x="640" y="45" />
-        <di:waypoint x="640" y="95" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ParallelGateway_0y08nf3_di" bpmnElement="confirmation-branching">
-        <dc:Bounds x="461" y="95" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="EndEvent_1xh9tav_di" bpmnElement="EndEvent_1xh9tav">
         <dc:Bounds x="896" y="191" width="36" height="36" />
@@ -113,21 +56,6 @@
           <dc:Bounds x="890" y="234" width="49" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_1apqn9e_di" bpmnElement="SequenceFlow_1apqn9e">
-        <di:waypoint x="640" y="145" />
-        <di:waypoint x="640" y="209" />
-        <di:waypoint x="896" y="209" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="644" y="215" width="35" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0egyiuq_di" bpmnElement="SequenceFlow_0egyiuq">
-        <di:waypoint x="665" y="120" />
-        <di:waypoint x="727" y="120" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="669" y="92" width="47" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_140iwon_di" bpmnElement="EndEvent_140iwon">
         <dc:Bounds x="896" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -141,8 +69,37 @@
       <bpmndi:BPMNShape id="ServiceTask_1upuqod_di" bpmnElement="update-invoice">
         <dc:Bounds x="727" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CallActivity_02zgsxm_di" bpmnElement="request-payment-information">
-        <dc:Bounds x="513" y="5" width="100" height="80" />
+      <bpmndi:BPMNShape id="ExclusiveGateway_140bf3a_di" bpmnElement="confirmation-check" isMarkerVisible="true">
+        <dc:Bounds x="615" y="95" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="641" y="144" width="80" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0egyiuq_di" bpmnElement="SequenceFlow_0egyiuq">
+        <di:waypoint x="665" y="120" />
+        <di:waypoint x="727" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="669" y="92" width="47" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1apqn9e_di" bpmnElement="SequenceFlow_1apqn9e">
+        <di:waypoint x="640" y="145" />
+        <di:waypoint x="640" y="209" />
+        <di:waypoint x="896" y="209" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="644" y="215" width="35" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1ow1bwl_di" bpmnElement="SequenceFlow_1ow1bwl">
+        <di:waypoint x="575" y="120" />
+        <di:waypoint x="615" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1oemgeg_di" bpmnElement="SequenceFlow_1oemgeg">
+        <di:waypoint x="390" y="120" />
+        <di:waypoint x="475" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1qmzi9n_di" bpmnElement="request-payment-information">
+        <dc:Bounds x="475" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

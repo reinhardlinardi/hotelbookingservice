@@ -26,12 +26,6 @@ type GetIDByProfileResponseData struct {
 	ID int `json:"id"`
 }
 
-type GetProfileByIDResponseData struct {
-	Identity int `json:"Identity"`
-	Name int `json:"Name"`
-	Email int `json:"Email"`
-}
-
 /* API */
 
 func RegisterProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -213,8 +207,8 @@ func GetProfileByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 
 	defer statement.Close()
 
-	var profileData GetProfileByIDResponseData
-	err = statement.QueryRow(id).Scan(&profileData.Name, &profileData.Identity, &profileData.Email)
+	var profileData Profile
+	err = statement.QueryRow(id).Scan(&profileData.Name, &profileData.ID, &profileData.Email)
 
 	if err != nil {
 		log.Println("GetProfileByID :", err)
