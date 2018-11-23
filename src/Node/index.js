@@ -76,23 +76,6 @@ client.subscribe('create-invoice', async function({ task, taskService }) {
   await taskService.complete(task, processVariables);
 });
 
-// client.subscribe('get-room-id', async function({ task, taskService }) {
-//     const invoice_id = task.variables.get('booking_id');
-//     const processVariables = new Variables();
-//     //Get Room ID
-//     try{
-//         let invoiceResponse = await axios.get(BASE_URL+'invoice/'+invoice_id);
-//         if(invoiceResponse.data.success){
-//             room_id = invoiceResponse.data.data.room_id;
-//             processVariables.set('room_id',price)
-//         } else {
-//             console.log(roomResponse.data.message);
-//         }
-//     } catch(error){
-//         console.log(error);
-//     }
-// });
-
 client.subscribe('get-room-price', async function({ task, taskService }) {
     const room_id = task.variables.get('room_id');
     const processVariables = new Variables();
@@ -134,55 +117,6 @@ client.subscribe('get-payer-name', async function({ task, taskService }) {
     }
     await taskService.complete(task, processVariables);
 });
-
-// client.subscribe('validate-payment', async function({ task, taskService }) {
-//     const booking_id = task.variables.get('user_id');
-//     const price = task.variables.get('room_price');
-//     const payer_name = task.variables.get('payer_name');
-//     console.log(price);
-    
-//     //TEMP
-//     const payment_type = 'credit';
-//     const processVariables = new Variables();
-
-//     try {
-//         console.log('===========================================================ANJENG');
-//         console.log(booking_id);
-//         console.log(price);
-//         console.log(payment_type);
-//         console.log('===========================================================ANJENG');
-//         let response = await axios.post(paymentGateway.url,{
-//             variables:{
-//                 booking_id:{
-//                     value : booking_id,
-//                     type : 'integer'
-//                 },
-//                 price:{
-//                     value : price,
-//                     type : 'integer'
-//                 },
-//                 payer_name:{
-//                     value : payer_name,
-//                     type : 'string'
-//                 },
-//                 payment_type:{
-//                     value : payment_type,
-//                     type : 'string'
-//                 }
-//             }
-//         });
-
-//         if(response.data.data.length > 0){
-//             processVariables.set('approved',true);
-//         } else {
-//             processVariables.set('approved',false);
-//         }
-//         //Calls Payment Gateway Service
-//     } catch(error) {
-//         console.log(error);
-//     }
-//     await taskService.complete(task, processVariables);
-// });
 
 client.subscribe('cancel-booking', async function({ task, taskService }) {
     const invoiceId = task.variables.get('invoice_id');
