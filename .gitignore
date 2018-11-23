@@ -5,4 +5,4 @@ src/Go/hotelbooking/hotelbooking.exe
 src/Go/hotelbooking/config.json
 
 src/Node/npm-debug.log
-src/Node/node_modules/
+src/Node/node_modules
