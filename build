@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "$CI_PROJECT_DIR"
+
 printf "\n>> (1/1) Building REST APIs...\n\n"
 /usr/local/go/bin/go build
 
