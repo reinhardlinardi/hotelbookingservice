@@ -110,6 +110,38 @@ func GetIDByProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 	SendOKWithData(w, data)
 }
 
+func GetProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id, err := strconv.Atoi(ps.ByName("id"))
+
+	if err != nil {
+		log.Println("GetProfile :", err)
+
+		SendNotFoundWithData(w)
+		return
+	}
+
+	statement, err := db.Prepare("SELECT name, identity, email FROM customer WHERE id = ?")
+
+	if err != nil {
+		log.Println("GetProfile :", err)
+		return
+	}
+
+	defer statement.Close()
+
+	var profile Profile
+	err = statement.QueryRow(id).Scan(&profile.Name, &profile.ID, &profile.Email)
+
+	if err != nil {
+		log.Println("GetProfile :", err)
+
+		SendNotFoundWithData(w)
+		return
+	}
+
+	SendOKWithData(w, profile)
+}
+
 func UpdateProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var profile Profile
 	body, err := ioutil.ReadAll(r.Body)

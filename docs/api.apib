@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: http://localhost:8060
+HOST: http://167.205.35.220/api/entity
 
 # Hotel Booking Service
 
@@ -59,6 +59,47 @@ Register new customer profile.
 
 + Parameters
     + id (number, required) - Profile ID
+
+### Get Profile [GET]
+
+Get customer profile.
+
++ Response 200 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + name (string, optional) - Customer name
+            + id (string, optional) - Customer ID or passport
+            + email (string, optional) - Customer email
+    + Body
+
+            {
+                "success" : true,
+                "message" : "OK",
+                "data" :
+                {
+                    "name" : "Cisco"
+                    "id" : "123451234512345",
+                    "email" : "cisco@std.stei.itb.ac.id"
+                }
+            }
+
++ Response 404 (application/json)
+    + Attributes
+        + success (boolean, required) - Request status
+        + message (string, required) - Response message
+        + data (object, required) - Response data
+            + name (string, optional) - Customer name
+            + id (string, optional) - Customer ID or passport
+            + email (string, optional) - Customer email
+    + Body
+
+            {
+                "success" : false,
+                "message" : "Invalid ID",
+                "data" : null
+            }
 
 ### Update Profile [PUT]
 

@@ -16,6 +16,7 @@ func main() {
 
 	router.POST("/customer", hotel.RegisterProfile)
 	router.GET("/customer", hotel.GetIDByProfile)
+	router.GET("/customer/:id", hotel.GetProfile)
 	router.PUT("/customer/:id", hotel.UpdateProfile)
 	//UpdateByCisco
 	router.GET("/customer/:id", hotel.GetProfileByID)

@@ -161,6 +161,11 @@ func GetInvoice(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var invoice CompleteInvoice
 	err = statement.QueryRow(id).Scan(&invoice.RoomID, &invoice.CustomerID, &invoice.CheckIn, &invoice.CheckOut, &invoice.Price, &invoice.Paid, &invoice.Cancelled)
 
+	if err != nil {
+		log.Println("GetInvoice :", err)
+		return
+	}
+
 	checkIn, err := time.Parse("2006-01-02", invoice.CheckIn)
 
 	if err != nil {
