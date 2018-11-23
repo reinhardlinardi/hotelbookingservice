@@ -1,18 +1,6 @@
 #!/bin/bash
 
-printf "\n>> (1/3) Copying files to '~/hotelbookingservice'...\n\n"
-echo "$USER_PASS" | sudo -S cp -r * /home/user/hotelbookingservice
-
-if [[ $? -ne 0 ]]
-then
-    printf "\n\n(!) Copy failed.\n\n"
-    exit 1
-fi
-
-printf "\n>> (2/3) Change working directory to '~/hotelbookingservice/src/Go/hotelbooking'...\n\n"
-cd /home/user/hotelbookingservice/src/Go/hotelbooking
-
-printf "\n>> (3/3) Building REST APIs...\n\n"
+printf "\n>> (1/1) Building REST APIs...\n\n"
 /usr/local/go/bin/go build
 
 if [[ $? -ne 0 ]]
