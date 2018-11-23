@@ -4,6 +4,8 @@ stages:
 build:
   stage: build
   script:
+    - chmod +x build
     - ./build
+    - git checkout build
   only:
     - master
