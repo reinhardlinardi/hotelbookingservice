@@ -1,22 +1,34 @@
 #!/bin/bash
 
-printf "\n>> (1/3) Change working directory to 'src/Go/hotelbooking'...\n\n"
-cd src/Go/hotelbooking
+printf "\n>> (1/5) Change working directory to '/src/Node'...\n\n"
+cd src/Node
 
-printf "\n>> (2/3) Copying 'config.json'...\n\n"
-cp ~/config/config.json .
+printf "\n>> (2/5) Creating symlink for 'node_modules'...\n\n"
+ln -s ~/node_modules node_modules
 
 if [[ $? -ne 0 ]]
 then
-    printf "\n\n(!) Copy failed.\n\n"
+    printf "\n\n(!) Symlink creation failed.\n\n"
     exit 1
 fi
 
-printf "\n>> (3/3) Building REST API executable...\n\n"
+printf "\n>> (3/5) Change working directory to '/src/Go/hotelbooking'...\n\n"
+cd ../Go/hotelbooking
+
+printf "\n>> (4/5) Creating symlink for 'config.json'...\n\n"
+ln -s ~/config/config.json config.json
+
+if [[ $? -ne 0 ]]
+then
+    printf "\n\n(!) Symlink creation failed.\n\n"
+    exit 2
+fi
+
+printf "\n>> (5/5) Building REST API executable...\n\n"
 /usr/local/go/bin/go build
 
 if [[ $? -ne 0 ]]
 then
     printf "\n\n(!) Build failed.\n\n"
-    exit 2
+    exit 3
 fi
