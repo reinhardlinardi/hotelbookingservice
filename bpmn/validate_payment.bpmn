@@ -34,9 +34,9 @@
     <bpmn:sequenceFlow id="SequenceFlow_1apqn9e" name="Denied" sourceRef="confirmation-check" targetRef="EndEvent_1xh9tav">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approved == "false"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_1ow1bwl" sourceRef="request-payment-information" targetRef="confirmation-check" />
-    <bpmn:sequenceFlow id="SequenceFlow_1oemgeg" sourceRef="start-validate" targetRef="request-payment-information" />
-    <bpmn:serviceTask id="request-payment-information" name="Request Payment Confirmation">
+    <bpmn:sequenceFlow id="SequenceFlow_1ow1bwl" sourceRef="request-payment-" targetRef="confirmation-check" />
+    <bpmn:sequenceFlow id="SequenceFlow_1oemgeg" sourceRef="start-validate" targetRef="request-payment-" />
+    <bpmn:serviceTask id="request-payment-" name="Request Payment Confirmation" camunda:type="external" camunda:topic="request-payment-confirmation">
       <bpmn:incoming>SequenceFlow_1oemgeg</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1ow1bwl</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -98,7 +98,7 @@
         <di:waypoint x="390" y="120" />
         <di:waypoint x="475" y="120" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_1qmzi9n_di" bpmnElement="request-payment-information">
+      <bpmndi:BPMNShape id="ServiceTask_1qmzi9n_di" bpmnElement="request-payment-">
         <dc:Bounds x="475" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>

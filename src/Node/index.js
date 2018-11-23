@@ -61,9 +61,8 @@ client.subscribe('create-invoice', async function({ task, taskService }) {
             in : checkIn,
             out : checkOut
           });
-      
           if(result.data.success){
-              if(result.data.data.length > 0){
+              if(result.data.data.id !== null){
                   processVariables.set('booking_id',result.data.data.id);
               } else {
                   console.log(result.data.message);
@@ -97,12 +96,14 @@ client.subscribe('create-invoice', async function({ task, taskService }) {
 client.subscribe('get-room-price', async function({ task, taskService }) {
     const room_id = task.variables.get('room_id');
     const processVariables = new Variables();
+
+    processVariables.set('payment_type','credit');
     //Get Room Price
     try{
         let roomResponse = await axios.get(BASE_URL+'room/'+room_id);
         if(roomResponse.data.success){
             price = roomResponse.data.data.price;
-            processVariables.set('room_price',price)
+            processVariables.set('price',price)
         } else {
             console.log(roomResponse.data.message);
         }
@@ -134,54 +135,54 @@ client.subscribe('get-payer-name', async function({ task, taskService }) {
     await taskService.complete(task, processVariables);
 });
 
-client.subscribe('validate-payment', async function({ task, taskService }) {
-    const booking_id = task.variables.get('user_id');
-    const price = task.variables.get('room_price');
-    const payer_name = task.variables.get('payer_name');
-    console.log(price);
+// client.subscribe('validate-payment', async function({ task, taskService }) {
+//     const booking_id = task.variables.get('user_id');
+//     const price = task.variables.get('room_price');
+//     const payer_name = task.variables.get('payer_name');
+//     console.log(price);
     
-    //TEMP
-    const payment_type = 'credit';
-    const processVariables = new Variables();
+//     //TEMP
+//     const payment_type = 'credit';
+//     const processVariables = new Variables();
 
-    try {
-        console.log('===========================================================ANJENG');
-        console.log(booking_id);
-        console.log(price);
-        console.log(payment_type);
-        console.log('===========================================================ANJENG');
-        let response = await axios.post(paymentGateway.url,{
-            variables:{
-                booking_id:{
-                    value : booking_id,
-                    type : 'integer'
-                },
-                price:{
-                    value : price,
-                    type : 'integer'
-                },
-                payer_name:{
-                    value : payer_name,
-                    type : 'string'
-                },
-                payment_type:{
-                    value : payment_type,
-                    type : 'string'
-                }
-            }
-        });
+//     try {
+//         console.log('===========================================================ANJENG');
+//         console.log(booking_id);
+//         console.log(price);
+//         console.log(payment_type);
+//         console.log('===========================================================ANJENG');
+//         let response = await axios.post(paymentGateway.url,{
+//             variables:{
+//                 booking_id:{
+//                     value : booking_id,
+//                     type : 'integer'
+//                 },
+//                 price:{
+//                     value : price,
+//                     type : 'integer'
+//                 },
+//                 payer_name:{
+//                     value : payer_name,
+//                     type : 'string'
+//                 },
+//                 payment_type:{
+//                     value : payment_type,
+//                     type : 'string'
+//                 }
+//             }
+//         });
 
-        if(response.data.data.length > 0){
-            processVariables.set('approved',true);
-        } else {
-            processVariables.set('approved',false);
-        }
-        //Calls Payment Gateway Service
-    } catch(error) {
-        console.log(error);
-    }
-    await taskService.complete(task, processVariables);
-});
+//         if(response.data.data.length > 0){
+//             processVariables.set('approved',true);
+//         } else {
+//             processVariables.set('approved',false);
+//         }
+//         //Calls Payment Gateway Service
+//     } catch(error) {
+//         console.log(error);
+//     }
+//     await taskService.complete(task, processVariables);
+// });
 
 client.subscribe('cancel-booking', async function({ task, taskService }) {
     const invoiceId = task.variables.get('invoice_id');
@@ -215,7 +216,7 @@ client.subscribe('cancel-booking', async function({ task, taskService }) {
     await taskService.complete(task, processVariables);
 });
 
-client.subscribe('request-payment-information', async function({ task, taskService }) {
+client.subscribe('request-payment-confirmation', async function({ task, taskService }) {
     const booking_id = task.variables.get('booking_id');
     const price = task.variables.get('price');
     const payer_name = task.variables.get('payer_name');
@@ -232,8 +233,12 @@ client.subscribe('request-payment-information', async function({ task, taskServi
 });
 
 client.subscribe('update-invoice', async function({ task, taskService }) {
-    const invoiceId = task.variables.get('invoice_id');
+    var invoiceId = task.variables.get('booking_id');
     const processVariables = new Variables();
+    console.log(typeof invoiceId);
+    if (!(typeof invoiceId === 'string' || invoiceId instanceof String)){
+        invoiceId = Number(invoiceId)
+    }
 
     try {
         let response = await axios.put(BASE_URL+'invoice/'+invoiceId);
