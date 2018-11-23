@@ -1,12 +1,12 @@
 #!/bin/bash
 
-pwd
+printf "\n>> (1/2) Change working directory to 'src/Go/hotelbooking'...\n\n"
 
-printf "\n>> (1/1) Building REST APIs...\n\n"
+printf "\n>> (2/2) Building REST API executable...\n\n"
 /usr/local/go/bin/go build
 
 if [[ $? -ne 0 ]]
 then
     printf "\n\n(!) Build failed.\n\n"
-    exit 2
+    exit 1
 fi
