@@ -218,36 +218,3 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 
 	SendOK(w)
 }
-
-//NEW CISCO
-func GetProfileByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	id, err := strconv.Atoi(ps.ByName("id"))
-
-	if err != nil {
-		log.Println("UpdateProfile :", err)
-
-		SendNotFound(w)
-		return
-	}
-
-	statement, err := db.Prepare("SELECT name,identity,email FROM customer WHERE id = ?")
-
-	if err != nil {
-		log.Println("GetIDByProfile :", err)
-		return
-	}
-
-	defer statement.Close()
-
-	var profileData Profile
-	err = statement.QueryRow(id).Scan(&profileData.Name, &profileData.ID, &profileData.Email)
-
-	if err != nil {
-		log.Println("GetProfileByID :", err)
-
-		SendOKWithData(w, nil)
-		return
-	}
-
-	SendOKWithData(w, profileData)
-}
