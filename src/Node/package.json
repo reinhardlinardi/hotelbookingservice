@@ -1,16 +1,13 @@
 {
-  "name": "hotelbookingservice",
+  "name": "hotelbooking",
   "version": "1.0.0",
-  "description": "",
+  "description": "Hotel Booking Service Task API",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "author": "",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "dependencies": {
     "axios": "^0.18.0",
-    "camunda-external-task-client-js": "^1.1.0-alpha1",
-    "npm": "^6.4.1"
+    "camunda-external-task-client-js": "^1.1.0-alpha1"
   }
 }
