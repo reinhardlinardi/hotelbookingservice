@@ -1,0 +1,5 @@
+{
+    "client_url": "http://localhost:8080/engine-rest",
+    "payment_gateway_url":"http://localhost:8080/engine-rest/process-definition/key/validate-payment-task/start",
+    "entity_service_url" : "http://localhost:8060/"
+}
