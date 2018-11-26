@@ -5,10 +5,9 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
-SET NAMES utf8mb4;
-
-CREATE DATABASE `hotel_booking` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `hotel_booking`;
+
+SET NAMES utf8mb4;
 
 CREATE TABLE `agent` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -90,4 +89,4 @@ INSERT INTO `room` (`id`, `type`, `tv`, `ac`, `internet`, `water`, `refrigerator
 (14,	'Double',	1,	1,	1,	1,	1,	1,	1,	1,	0,	400000,	'Kamar untuk dua orang dengan double bed yang luas dan nyaman, dengan fasilitas lengkap dan pemandangan langsung ke kolam renang.'),
 (15,	'Single',	1,	1,	1,	1,	1,	1,	1,	0,	0,	400000,	'Kamar single bed yang luas dengan fasilitas yang lengkap.');
 
--- 2018-11-26 07:38:15
+-- 2018-11-26 07:43:54
