@@ -105,7 +105,7 @@ func CreateRoom(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	defer statement.Close()
 
-	res, err := statement.Exec(*room.RoomType, *room.Description, *room.TV, *room.AC, *room.Internet, *room.HotWater, *room.Refrigerator, *room.SafeDepositBox, *room.Wardrobe, *room.Window, *room.Balcony, *room.Price)
+	res, err := statement.Exec(*room.RoomType, *room.TV, *room.AC, *room.Internet, *room.HotWater, *room.Refrigerator, *room.SafeDepositBox, *room.Wardrobe, *room.Window, *room.Balcony, *room.Price, *room.Description)
 
 	if err != nil {
 		log.Println("CreateRoom :", err)

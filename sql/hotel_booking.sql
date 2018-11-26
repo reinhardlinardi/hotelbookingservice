@@ -18,6 +18,9 @@ CREATE TABLE `agent` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+INSERT INTO `agent` (`id`, `name`, `address`, `expire_date`) VALUES
+(1,	'Traveloka',	'Jakarta',	'2020-01-01'),
+(2,	'Airy',	'Jakarta',	'2021-01-01');
 
 CREATE TABLE `customer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -27,6 +30,9 @@ CREATE TABLE `customer` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+INSERT INTO `customer` (`id`, `name`, `identity`, `email`) VALUES
+(1,	'Cisco',	'123412341234',	'cisco@coki.com'),
+(2,	'Roland',	'112233445566',	'roland@avatar.com');
 
 CREATE TABLE `employee` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -36,6 +42,8 @@ CREATE TABLE `employee` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+INSERT INTO `employee` (`id`, `name`, `address`, `job_desc`) VALUES
+(1,	'Dono',	'Jakarta',	'Membersihkan semua kamar di lantai 2');
 
 CREATE TABLE `invoice` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -74,6 +82,12 @@ CREATE TABLE `room` (
 INSERT INTO `room` (`id`, `type`, `tv`, `ac`, `internet`, `water`, `refrigerator`, `deposit_box`, `wardrobe`, `window`, `balcony`, `price`, `description`) VALUES
 (1,	'Single',	1,	1,	1,	1,	1,	1,	1,	0,	0,	200000,	'Kamar untuk satu orang dengan single bed yang luas dan nyaman serta fasilitas yang lengkap.'),
 (2,	'Double',	1,	1,	1,	1,	1,	1,	1,	1,	0,	400000,	'Kamar untuk dua orang dengan double bed yang luas dan nyaman, dengan fasilitas lengkap dan pemandangan langsung ke kolam renang.'),
-(3,	'Family',	1,	1,	1,	1,	1,	1,	1,	1,	1,	800000,	'Kamar untuk satu keluarga yang luas dan nyaman, dengan fasilitas lengkap, sliding window, dan private balcony.');
+(3,	'Family',	1,	1,	1,	1,	1,	1,	1,	1,	1,	800000,	'Kamar untuk satu keluarga yang luas dan nyaman, dengan fasilitas lengkap, sliding window, dan private balcony.'),
+(10,	'Single',	1,	1,	1,	1,	1,	1,	1,	0,	0,	400000,	'Kamar single bed yang luas dengan fasilitas yang lengkap.'),
+(11,	'Single',	1,	1,	1,	1,	1,	1,	1,	0,	0,	400000,	'Kamar single bed yang luas dengan fasilitas yang lengkap.'),
+(12,	'Double',	1,	1,	1,	1,	1,	1,	1,	1,	0,	400000,	'Kamar untuk dua orang dengan double bed yang luas dan nyaman, dengan fasilitas lengkap dan pemandangan langsung ke kolam renang.'),
+(13,	'Family',	1,	1,	1,	1,	1,	1,	1,	1,	1,	800000,	'Kamar untuk satu keluarga yang luas dan nyaman, dengan fasilitas lengkap, sliding window, dan private balcony.'),
+(14,	'Double',	1,	1,	1,	1,	1,	1,	1,	1,	0,	400000,	'Kamar untuk dua orang dengan double bed yang luas dan nyaman, dengan fasilitas lengkap dan pemandangan langsung ke kolam renang.'),
+(15,	'Single',	1,	1,	1,	1,	1,	1,	1,	0,	0,	400000,	'Kamar single bed yang luas dengan fasilitas yang lengkap.');
 
--- 2018-11-21 11:54:45
+-- 2018-11-26 07:38:15
