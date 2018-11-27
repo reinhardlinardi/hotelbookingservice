@@ -4,7 +4,11 @@
     <bpmn:startEvent id="StartEvent_1" name="Start" camunda:formKey="cancel-booking">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="invoice_id" label="ID Invoice yang akan dicancel" type="enum" />
+          <camunda:formField id="invoice_id" label="ID Invoice yang akan dicancel" type="enum">
+            <camunda:validation>
+              <camunda:constraint name="required" />
+            </camunda:validation>
+          </camunda:formField>
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:outgoing>SequenceFlow_0qewu5x</bpmn:outgoing>
@@ -20,7 +24,17 @@
       <bpmn:outgoing>paid</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_0wgfssd" sourceRef="cancel" targetRef="ExclusiveGateway_1782amt" />
-    <bpmn:userTask id="refund" name="Refund">
+    <bpmn:userTask id="refund" name="Refund" camunda:candidateGroups="ppls-admin">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="invoice_id" label="Invoice ID" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="refunded" label="Refund the Payment?" type="boolean" defaultValue="false" />
+        </camunda:formData>
+      </bpmn:extensionElements>
       <bpmn:incoming>paid</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0rhgsi3</bpmn:outgoing>
     </bpmn:userTask>

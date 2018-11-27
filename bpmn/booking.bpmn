@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1vmojkk" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.0.3">
   <bpmn:process id="order-room" name="order-room" isExecutable="true">
-    <bpmn:startEvent id="start-booking" name="Start&#10;&#10;" camunda:formKey="BookRoom">
+    <bpmn:startEvent id="start-booking" name="Start&#10;" camunda:formKey="BookRoom">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="user_id" label="ID dari user yang mau melakukan booking" type="enum" />
           <camunda:formField id="room_type" label="Tipe kamar" type="enum" />
           <camunda:formField id="check_in" label="Waktu checkin" type="string" />
           <camunda:formField id="check_out" label="Waktu checkout" type="string" />
+          <camunda:formField id="payment_type" label="Payment Type" type="string" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:outgoing>SequenceFlow_1tukdis</bpmn:outgoing>
@@ -68,7 +69,7 @@
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="start-booking">
         <dc:Bounds x="163" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="169" y="145" width="24" height="40" />
+          <dc:Bounds x="169" y="145" width="24" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="EndEvent_1g5q5av_di" bpmnElement="EndEvent_1g5q5av">
