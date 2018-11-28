@@ -8,6 +8,8 @@
   "license": "UNLICENSED",
   "dependencies": {
     "axios": "^0.18.0",
-    "camunda-external-task-client-js": "^1.1.0-alpha1"
+    "camunda-external-task-client-js": "^1.1.0-alpha1",
+    "express": "^4.16.4",
+    "soap": "^0.25.0"
   }
 }
