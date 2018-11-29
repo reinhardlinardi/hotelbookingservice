@@ -21,9 +21,10 @@ const soap = require('soap');
 // });
 
 var url = 'http://167.205.35.211:8080/easypay/PaymentService?wsdl';
+
 var args = {
-    paymentId:'d94f85fe-ac80-4e0e-bdab-8947001c2cff',
-    lastEventId:68
+    paymentId:'743bbd9f-287c-466f-9fe8-2d95b987dba2',
+    lastEventId:0
 };
 
 soap.createClient(url, function(err, client) {
@@ -32,6 +33,36 @@ soap.createClient(url, function(err, client) {
         // if(err) throw new Error(err);
         if(err) console.log(err);
         console.log(result);
-        console.log(result.return.events);
+        var events = result.return.events;
+        console.log(events);
+        for(key in events){
+            console.log(events[key]);
+            if(events[key].attributes.type =='FAILURE'){
+                console.log(events[key].attributes.reason);
+            } else {
+                if(events[key].attributes.type == 'SUCCESS'){
+                    console.log('SUCCESS');
+                } else {
+                    if(events[key].attributes.type == 'OPEN_URL'){
+                        console.log('SUCCESS');
+                    } else {
+    
+                    }
+                }
+            }
+        }
     });
 });
+
+// var args = {
+//     paymentMethodId :'ovo',
+//     amount:10000
+// };
+
+
+// soap.createClient(url, function(err, client) {
+//     client.beginPayment(args, function(err, result) {
+//         if(err) console.log(err);
+//         console.log(result);
+//     });
+// });

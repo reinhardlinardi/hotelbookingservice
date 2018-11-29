@@ -132,29 +132,6 @@ client.subscribe('get-payer-name', async function({ task, taskService }) {
     await taskService.complete(task, processVariables);
 });
 
-client.subscribe('update-invoice', async function({ task, taskService }) {
-    var invoiceId = task.variables.get('booking_id');
-    const processVariables = new Variables();
-    console.log(typeof invoiceId);
-    if (!(typeof invoiceId === 'string' || invoiceId instanceof String)){
-        invoiceId = Number(invoiceId)
-    }
-
-    try {
-        let response = await axios.put(BASE_URL+'invoice/'+invoiceId);
-        invoiceDetails = response.data;
-        if (invoiceDetails.success) {
-            processVariables.set('invoice-updated', true);
-        } else {
-            console.log(invoiceDetails.message);
-            processVariables.set('invoice-updated', false);
-        }
-    } catch(error) {
-        console.log(error);
-    }
-    await taskService.complete(task, processVariables);
-});
-
 // Implementations of validate payment process
 client.subscribe('request-payment-event', async function({ task, taskService }) {
     const payment_type = task.variables.get('payment_type');
@@ -183,7 +160,7 @@ client.subscribe('request-payment-event', async function({ task, taskService }) 
             client.beginPayment(args, function(err, result) {
                 if(err) console.log(err);
                 console.log(result);
-                payment_result = result.return.paymentId
+                payment_result = result.return;
                 processVariables.set('paymentId',payment_result);
                 processVariables.set('lastEventId',0);
             });
@@ -207,21 +184,61 @@ client.subscribe('request-payment-confirmation', async function({ task, taskServ
             lastEventId:lastEventId
         };
         
-        soap.createClient(url, function(err, client) {
+        soap.createClient(payment_url, function(err, client) {
             // console.log(client.confirmPayment);
             client.getPaymentEvents(args, function(err, result) {
+                // if(err) throw new Error(err);
                 if(err) console.log(err);
                 console.log(result);
-
-                //check input
-
-                //update status if success
-                // processVariables.set('approved',true);
-
-                //update status if false
-                // processVariables.set('approved',false);
+                var events = result.return.events;
+                console.log(events);
+                for(key in events){
+                    console.log(events[key]);
+                    if(events[key].attributes.paymentEventId !== lastEventId){
+                        processVariables.set('lastEventId',events[key].attributes.paymentEventId)
+                    }
+                    if(events[key].attributes.type =='FAILURE'){
+                        console.log(events[key].attributes.reason);
+                        processVariables.set('approved',false);
+                    } else {
+                        if(events[key].attributes.type == 'SUCCESS'){
+                            console.log('SUCCESS');
+                            processVariables.set('approved',true);
+                        } else {
+                            if(events[key].attributes.type == 'OPEN_URL'){
+                                console.log(events[key].attributes.urlToOpen);
+                                processVariables.set('urlToOpen',events[key].attributes.urlToOpen)
+                            } else {
+                                
+                            }
+                        }
+                    }
+                }
             });
         });
+    } catch(error) {
+        console.log(error);
+    }
+    await taskService.complete(task, processVariables);
+});
+
+client.subscribe('update-invoice', async function({ task, taskService }) {
+    var invoiceId = task.variables.get('booking_id');
+    const processVariables = new Variables();
+    console.log(typeof invoiceId);
+    if (!(typeof invoiceId === 'string' || invoiceId instanceof String)){
+        invoiceId = Number(invoiceId)
+    }
+
+    try {
+        let response = await axios.put(BASE_URL+'invoice/'+invoiceId);
+        invoiceDetails = response.data;
+        if (invoiceDetails.success) {
+            processVariables.set('invoice-updated', true);
+        } else {
+            console.log(invoiceDetails.message);
+            processVariables.set('invoice-updated', false);
+        }
     } catch(error) {
         console.log(error);
     }
