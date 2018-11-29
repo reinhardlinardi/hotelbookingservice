@@ -4,6 +4,7 @@
 const axios = require('axios').create();
 const fs = require('fs');
 const { Client, logger, Variables } = require('camunda-external-task-client-js');
+const soap = require('soap');
 
 /*
 Configuration
@@ -23,6 +24,7 @@ const client_config = { baseUrl: conf['client_url'], use: logger };
 // create a Client instance with custom configuration
 const client = new Client(client_config);
 const BASE_URL = conf['entity_service_url'];
+const payment_url = conf['payment_service_url'];
 
 /* 
     Implementation 
@@ -154,12 +156,72 @@ client.subscribe('update-invoice', async function({ task, taskService }) {
 });
 
 // Implementations of validate payment process
-client.subscribe('request-payment-confirmation', async function({ task, taskService }) {
+client.subscribe('request-payment-event', async function({ task, taskService }) {
+    const payment_type = task.variables.get('payment_type');
+    const price = task.variables.get('price');
     const processVariables = new Variables();
+
+    //JOROK
+    var payment_types = {
+        'OVO' : 'ovo',
+        'GO-PAY' : 'go_pay',
+        'Transfer' : 'bank',
+        'Virtual Account' : 'bank_va'
+    }
+
+    var payment_result;
 
     //Calls Payment Gateway Service
     try {
-        processVariables.set('approved',true);
+        var args = {
+            paymentMethodId :payment_types[payment_type],
+            amount:price
+        };
+        
+
+        soap.createClient(payment_url, function(err, client) {
+            client.beginPayment(args, function(err, result) {
+                if(err) console.log(err);
+                console.log(result);
+                payment_result = result.return.paymentId
+                processVariables.set('paymentId',payment_result);
+                processVariables.set('lastEventId',0);
+            });
+        });
+    } catch(error) {
+        console.log(error);
+    }
+    await taskService.complete(task, processVariables);
+});
+
+client.subscribe('request-payment-confirmation', async function({ task, taskService }) {
+    const lastEventId = task.variables.get('lastEventId');
+    const paymentId = task.variables.get('paymentId');
+    const processVariables = new Variables();
+
+
+    //Calls Payment Gateway Service
+    try {
+        var args = {
+            paymentId:paymentId,
+            lastEventId:lastEventId
+        };
+        
+        soap.createClient(url, function(err, client) {
+            // console.log(client.confirmPayment);
+            client.getPaymentEvents(args, function(err, result) {
+                if(err) console.log(err);
+                console.log(result);
+
+                //check input
+
+                //update status if success
+                // processVariables.set('approved',true);
+
+                //update status if false
+                // processVariables.set('approved',false);
+            });
+        });
     } catch(error) {
         console.log(error);
     }
