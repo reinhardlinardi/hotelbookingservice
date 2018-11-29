@@ -82,11 +82,11 @@ INSERT INTO `room` (`id`, `type`, `tv`, `ac`, `internet`, `water`, `refrigerator
 (1,	'Single',	1,	1,	1,	1,	1,	1,	1,	0,	0,	200000,	'Kamar untuk satu orang dengan single bed yang luas dan nyaman serta fasilitas yang lengkap.'),
 (2,	'Double',	1,	1,	1,	1,	1,	1,	1,	1,	0,	400000,	'Kamar untuk dua orang dengan double bed yang luas dan nyaman, dengan fasilitas lengkap dan pemandangan langsung ke kolam renang.'),
 (3,	'Family',	1,	1,	1,	1,	1,	1,	1,	1,	1,	800000,	'Kamar untuk satu keluarga yang luas dan nyaman, dengan fasilitas lengkap, sliding window, dan private balcony.'),
-(10,	'Single',	1,	1,	1,	1,	1,	1,	1,	0,	0,	400000,	'Kamar single bed yang luas dengan fasilitas yang lengkap.'),
-(11,	'Single',	1,	1,	1,	1,	1,	1,	1,	0,	0,	400000,	'Kamar single bed yang luas dengan fasilitas yang lengkap.'),
+(10,	'Single',	1,	1,	1,	1,	1,	1,	1,	0,	0,	200000,	'Kamar single bed yang luas dengan fasilitas yang lengkap.'),
+(11,	'Single',	1,	1,	1,	1,	1,	1,	1,	0,	0,	200000,	'Kamar single bed yang luas dengan fasilitas yang lengkap.'),
 (12,	'Double',	1,	1,	1,	1,	1,	1,	1,	1,	0,	400000,	'Kamar untuk dua orang dengan double bed yang luas dan nyaman, dengan fasilitas lengkap dan pemandangan langsung ke kolam renang.'),
 (13,	'Family',	1,	1,	1,	1,	1,	1,	1,	1,	1,	800000,	'Kamar untuk satu keluarga yang luas dan nyaman, dengan fasilitas lengkap, sliding window, dan private balcony.'),
 (14,	'Double',	1,	1,	1,	1,	1,	1,	1,	1,	0,	400000,	'Kamar untuk dua orang dengan double bed yang luas dan nyaman, dengan fasilitas lengkap dan pemandangan langsung ke kolam renang.'),
-(15,	'Single',	1,	1,	1,	1,	1,	1,	1,	0,	0,	400000,	'Kamar single bed yang luas dengan fasilitas yang lengkap.');
+(15,	'Single',	1,	1,	1,	1,	1,	1,	1,	0,	0,	200000,	'Kamar single bed yang luas dengan fasilitas yang lengkap.');
 
--- 2018-11-26 07:43:54
+-- 2018-11-30 10:39:14

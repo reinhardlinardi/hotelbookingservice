@@ -93,7 +93,7 @@ client.subscribe('get-room-price', async function({ task, taskService }) {
     const room_id = task.variables.get('room_id');
     const processVariables = new Variables();
 
-    processVariables.set('payment_type','credit');
+    processVariables.set('payment_type','GO-PAY');
 
     //Get Room Price
     try{
@@ -133,7 +133,7 @@ client.subscribe('get-payer-name', async function({ task, taskService }) {
 });
 
 // Implementations of validate payment process
-client.subscribe('request-payment-event', async function({ task, taskService }) {
+client.subscribe('begin-payment', async function({ task, taskService }) {
     const payment_type = task.variables.get('payment_type');
     const price = task.variables.get('price');
     const processVariables = new Variables();
@@ -154,72 +154,79 @@ client.subscribe('request-payment-event', async function({ task, taskService }) 
             paymentMethodId :payment_types[payment_type],
             amount:price
         };
-        
 
         soap.createClient(payment_url, function(err, client) {
             client.beginPayment(args, function(err, result) {
                 if(err) console.log(err);
                 console.log(result);
                 payment_result = result.return;
+
                 processVariables.set('paymentId',payment_result);
                 processVariables.set('lastEventId',0);
+                taskService.complete(task, processVariables);
             });
         });
     } catch(error) {
         console.log(error);
     }
-    await taskService.complete(task, processVariables);
+    
 });
 
 client.subscribe('request-payment-confirmation', async function({ task, taskService }) {
     const lastEventId = task.variables.get('lastEventId');
     const paymentId = task.variables.get('paymentId');
     const processVariables = new Variables();
+    
+    var processFinished = false;
 
-
-    //Calls Payment Gateway Service
-    try {
-        var args = {
-            paymentId:paymentId,
-            lastEventId:lastEventId
-        };
-        
-        soap.createClient(payment_url, function(err, client) {
-            // console.log(client.confirmPayment);
-            client.getPaymentEvents(args, function(err, result) {
-                // if(err) throw new Error(err);
-                if(err) console.log(err);
-                console.log(result);
-                var events = result.return.events;
-                console.log(events);
-                for(key in events){
-                    console.log(events[key]);
-                    if(events[key].attributes.paymentEventId !== lastEventId){
-                        processVariables.set('lastEventId',events[key].attributes.paymentEventId)
-                    }
-                    if(events[key].attributes.type =='FAILURE'){
-                        console.log(events[key].attributes.reason);
-                        processVariables.set('approved',false);
-                    } else {
-                        if(events[key].attributes.type == 'SUCCESS'){
-                            console.log('SUCCESS');
-                            processVariables.set('approved',true);
+    var timer = setInterval(function() {
+        try {
+            var args = {
+                paymentId:paymentId,
+                lastEventId:lastEventId
+            };
+            
+            soap.createClient(payment_url, function(err, client) {
+                // console.log(client.confirmPayment);
+                client.getPaymentEvents(args, function(err, result) {
+                    // if(err) throw new Error(err);
+                    if(err) console.log(err);
+                    console.log(result);
+                    var events = result.return.events;
+                    console.log(events);
+                    for(key in events){
+                        console.log(events[key]);
+                        // if(events[key].attributes.paymentEventId !== lastEventId){
+                        //     processVariables.set('lastEventId',events[key].attributes.paymentEventId)
+                        // }
+                        if(events[key].attributes.type =='FAILURE'){
+                            console.log(events[key].attributes.reason);
+                            processVariables.set('approved',false);
+                            processFinished = true;
                         } else {
-                            if(events[key].attributes.type == 'OPEN_URL'){
-                                console.log(events[key].attributes.urlToOpen);
-                                processVariables.set('urlToOpen',events[key].attributes.urlToOpen)
+                            if(events[key].attributes.type == 'SUCCESS'){
+                                console.log('SUCCESS');
+                                processVariables.set('approved',true);
+                                processFinished = true;
                             } else {
-                                
+                                if(events[key].attributes.type == 'OPEN_URL'){
+                                    console.log(events[key].attributes.urlToOpen);
+                                    // processVariables.set('urlToOpen',events[key].attributes.urlToOpen)
+                                }
                             }
                         }
                     }
-                }
+                });
             });
-        });
-    } catch(error) {
-        console.log(error);
-    }
-    await taskService.complete(task, processVariables);
+        } catch(error) {
+            console.log(error);
+        }
+
+        if(processFinished) {
+            clearInterval(timer);
+            taskService.complete(task, processVariables);
+        } 
+    }, 5000);
 });
 
 client.subscribe('update-invoice', async function({ task, taskService }) {
